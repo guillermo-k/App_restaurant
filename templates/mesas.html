@@ -1,0 +1,56 @@
+{% extends "/base.html" %}
+
+{% block titulo %}mesas{% endblock %}
+
+{% block header %}MESAS{% endblock %}
+
+{% block main %}
+<div>
+    <table>
+        <thead>
+
+            <th>Mesa</th>
+            <th>Pedidos</th>
+            <th>Total</th>
+            <th>Acciones</th>
+
+        </thead>
+        <tbody>
+            {% for mesa in mesas %}
+            <tr>
+                <td> {{mesa[0]}} </td> <!-- Mesa -->
+                <td>
+                    <!-- Pedidos -->
+                    <div id="{{mesa[0]}}" style="display: none;">
+                        <table>
+                            <thead>
+                                <th>Plato</th>
+                                <th>Sub-Total</th>
+                            </thead>
+                            {% for it in mesa[1] %}
+                            <tr>
+                                <td style="text-align: right; padding-right: 2rem;">
+                                    <u>{{it[0]}}</u>
+                                </td>
+                                <td style="text-align: right; padding-right: 2rem;">$ {{it[1]}}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <button onclick='ver("{{mesa[0]}}")' class="btn-comentarios {{mesa[0]}}">Ver</button>
+                </td>
+                <td> $ {{mesa[2]}} </td><!-- Total -->
+                <td>
+                    <a href="platos/{{mesa[0]}}">
+                        <button>Modificar</button>
+                    </a><br>
+                    <a href="/cerrar_cuenta/{{mesa[0]}}"><button>Cerrar cuenta</button></a>
+                </td>
+                <!-- Acciones -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

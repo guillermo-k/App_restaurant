@@ -1,0 +1,117 @@
+{% extends "/base.html" %}
+
+{% block titulo %}Administracion{% endblock %}
+
+{% block header %}ADMININISTRACION{% endblock %}
+
+{% block main %}
+<button onclick="desplegar('agregarUsuario')" class="btn-comentarios">Agregar usuario</button>
+<button onclick="desplegar('editarUsuario')" class="btn-comentarios">Editar mis datos</button>
+<button onclick="desplegar('agregarPlato')" class="btn-comentarios">Agregar plato</button>
+<button onclick="desplegar('cantidadMesas')" class="btn-comentarios">Cantidad de mesas</button>
+<div id="agregarUsuario" style="display: none">
+    <form method="post" action="/crear_usuario" enctype="multipart/form-data">
+        <h2>Crear usuario</h2>
+        <BR>
+        <div>
+            <label for="txtUsuario">Nombre de usuario:</label>
+            <input id="txtUsuario" type="text" name="txtUsuario">
+        </div>
+        <br>
+        <div>
+            <label for="txtPassword">Password:</label>
+            <input type="password" name="txtPassword" id="txtPassword">
+        </div>
+        <br>
+        <div>Super usuario: 
+            <label for="si">Si</label>
+            <input type="radio" class="checkbox" name="superUsuario" id="si" value="1">
+            <label for="no">No</label>
+            <input type="radio" class="checkbox" name="superUsuario" id="no" value="0" checked>
+        </div>
+        <br>
+        <div class="form-group">
+            <input name="submit" type="submit" value="Agregar usuario">
+        </div>
+    </form>
+</div>
+<div id="editarUsuario" style="display: none">
+    <form method="post" action="/modificar_usuario" enctype="multipart/form-data">
+        <h2>Editar usuario</h2>
+        <br>
+        <div>
+            <label for="txtUsuario">Nuevo nombre de usuario:</label>
+            <input id="txtUsuario" type="text" name="txtUsuario">
+        </div><br>
+        <div>
+            <label for="txtPassword">Nuevo password:</label>
+            <input type="password" name="txtPassword" id="txtPassword">
+        </div><br>
+        <div>
+            <input type="submit" value="Enviar">
+        </div>
+    </form>
+</div>
+<div id="agregarPlato" style="display: none;">
+    <form name="formulario" action="/update/" method="POST" enctype="multipart/form-data">
+        <h2>Agregar plato</h2>
+        <div>
+            <label for="txtNombre">Nombre: </label>
+            <input type="text" name="txtNombre" id="txtNombre">
+        </div><br>
+        <div class="txtFoto">
+            <label for="txtFoto">Foto: </label>
+            <input type="file" name="txtFoto" id="txtFoto">
+        </div><br>
+        <div>
+            <label for="txtDescripcion_p">Descripción: </label>
+            <textarea type="text" name="txtDescripcionPlato" id="txtDescripcionPlato"></textarea>
+        </div><br>
+        <div>
+            <label for="txtPrecio">Precio: </label>
+            <input type="text" name="txtPrecio" id="txtPrecio">
+        </div><br>
+        <input type="hidden" name="viejoNombreFoto" id="viejoNombreFoto" value="">
+        <div><input type="submit" value="Cargar nuevo plato"></div>
+    </form>
+</div>
+<div id="cantidadMesas" style="display: none;">
+    <form action="/cantidad_mesas/" method="post">
+        <h2>Seleccione la cantidad de mesas</h2>
+        <input type="number" name="cantidad_mesas" id="cantidad_mesas" value="{{cantidad}}"><br>
+        <input type="submit" value="Enviar">
+    </form>
+</div>
+<div>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for plato in platos %}
+                <tr>
+                    <td> <img width="100px" src="fotos/{{plato[4]}}" alt="{{plato[4]}}"> </td>
+                    <td> {{plato[1]}} </td>
+                    <td> {{plato[2]}} </td>
+                    <td> {{plato[3]}} </td>
+                    <td><a href="/edit/{{plato[0]}}"><button>Editar</button></a> <a
+                            onclick="return confirm('¿Desea borrar {{plato[1]}}?')"
+                            href="/destroy/{{plato[0]}}"><button>Eliminar</button></a>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+    </div>
+
+{% endblock %}

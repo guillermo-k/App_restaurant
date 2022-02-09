@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block titulo %}Platos{% endblock %}
+
+{% block header %}Platos <br> Mesa: {{mesa}}{% endblock %}
+
+{% block main %}
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Foto</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td></td><td></td><td></td><td></td>
+                <td>
+                    <form action="/cargarPedido/{{mesa}}" method="post" id="cantidad"><input type="submit" value="cargar"></form>
+                </td></tr>
+            {% for plato in platos %}
+            <tr>
+                <td> <img width="100px" src="../fotos/{{plato[4]}}" alt="{{plato[4]}}"> </td>
+                <td> <u>{{plato[1]}}</u> </td>
+                <td> {{plato[2]}} </td>
+                <td> $ {{plato[3]}} </td>
+                <td><select form="cantidad" name={{plato[1]}} id={{plato[0]}}>
+                    <option value="5">5</option>
+                    <option value="4">4</option>
+                    <option value="3">3</option>
+                    <option value="2">2</option>
+                    <option value="1">1</option>
+                    <option value="0" selected>0</option>
+                    <option class="negativo" value="-1">-1</option>
+                    <option class="negativo" value="-2">-2</option>
+                    <option class="negativo" value="-3">-3</option>
+                    <option class="negativo" value="-4">-4</option>
+                    <option class="negativo" value="-5">-5</option>
+                </select></td>
+                <!-- <td><button>Sumar</button><button>restar</button>
+                </td> -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+            {% endblock %}

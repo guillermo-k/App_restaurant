@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+prueba
+{% endblock %}
+
+{% block header %}
+Prueba
+{% endblock %}
+
+
+{% block main %}
+<table>
+    <thead>
+        <td>Producto</td>
+        <td>Valor</td>
+    </thead>
+    <tbody>
+        {% for it in resumen[:-1] %}
+        <tr>
+            <td> {{it[0]}}:{{it[1]}}</td>
+            <td>$ {{it[2]}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div id="total"><h1>TOTAL= $ {{resumen[-1]}}</h1></div>
+ <br>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+edit
+{% endblock %}
+
+{% block header %}
+Editar plato
+{% endblock %}
+
+
+{% block main %}
+<form name="formulario" action="/update/{{plato[0]}}" method="POST" enctype="multipart/form-data">
+    <div><input type="hidden" name="txtIdPlato" id="txtIdPlato" value="{{plato[0]}}"></div>
+    <div>
+        <label for="txtNombre">Nombre: </label>
+        <input type="text" name="txtNombre" id="txtNombre" value="{{plato[1]}}" required >
+    </div>
+    <br>
+    <div>
+        <label for="txtDescripcion_p">Descripción: </label>
+        <textarea type="text" name="txtDescripcionPlato" id="txtDescripcionPlato" value="{{plato[2]}}" required>{{plato[2]}}</textarea>
+    </div>
+    <br>
+    <div>
+        <label for="txtPrecio">Precio: </label>
+        <input type="text" name="txtPrecio" id="txtPrecio" value="{{plato[3]}}" required>
+    </div>
+    <br>
+    <div class="txtFoto">
+        <label for="txtFoto">Foto: </label>
+        <input type="file" name="txtFoto" id="txtFoto">
+    </div><br>
+    <div><img width="300px" src="../fotos/{{plato[4]}}" alt="{{plato[4]}}"></div>
+    <br>
+    <div><input type="submit" value="Modificar plato"></div>
+    <input type="hidden" name="viejoNombreFoto" id="viejoNombreFoto" value="{{plato[4]}}">
+</form>
+
+
+
+{% endblock %}

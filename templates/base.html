@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es" title="Spanish">
+
+<head>
+    <link rel="icon" type="image/vnd.microsoft.icon" href=".ico">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}
+        {% endblock %}</title>
+    <script src="https://kit.fontawesome.com/d01d968878.js" crossorigin="anonymous"></script>
+    <script src="/static/sistema.js"> </script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+        href="https://fonts.googleapis.com/css2? family = Inconsolata: wght @ 600 & family = Montserrat & display = swap "
+        rel=" stylesheet ">
+    <link rel="stylesheet" href="{{ url_for ('static', filename= 'vistas.css') }}">
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body>
+
+    <header>
+        <h1>
+            {% block header %}
+            {% endblock %}
+        </h1>
+        <div class="header2">
+            {% block header2 %}
+            {% endblock %}
+        </div>
+        {% block producto %}
+        {% endblock %}
+    </header>
+    <Nav class="nav1">
+        <!-- <span>
+            <a href="/"><button>INICIO</button></a>
+            </span>
+
+            <span class="b">
+                <a href="/productos/0"> <button>PRODUCTOS</button></a>
+            </span>
+
+            <span class="b">
+                <a href="/ubicacion"><button> UBICACIÓN</button></a>
+            </span>
+
+            <span class="b">
+                <a href="/comentarios"><button> COMENTARIOS</button></a>
+            </span> -->
+            {% if "username" in session %}
+            <span>
+                <a href="/logout"><button>Cerrar sesión</button></a>
+            </span>
+            <span>
+                <a href="/administracion"><button>Administrar</button></a>
+            </span>
+            <span>
+                <a href="/mesas"><button>Mesas</button></a>
+            </span>
+            {% endif %}
+    </Nav>
+    <hr class="linea">
+    {% with messages= get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-danger" role="alert">
+        {% for message in messages %}
+        {{message}}
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <main>{% block main %}
+        {% endblock %}</main>
+    </div>
+    <!-- <div class="diseño">
+        <h3>Diseño:
+            <a href="mailito:guillermo.fullstack@gmail.com">guillermo.fullstack@gmail.com</a>
+        </h3>
+    </div> -->
+    <div class="contribucion">
+        <a href="https://www.freepik.es/vectores/fondo">Vector de Fondo creado por Creative_hat - www.freepik.es</a>
+    <div class="contribucion">Iconos diseñados por <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a
+            href="https://www.flaticon.es/" title="Flaticon">www.flaticon.es</a></div>
+</body>
+
+</html>

@@ -336,7 +336,7 @@ def cerrarCuenta(mesa):
         sqlventa="INSERT `my_resto`.`ventas` (`mesa`, `hora_abre`, `hora_cierra`, `consumo`, `total`) VALUES(%s,%s,%s,%s,%s);" # Creamos la sentencia para guardar la venta en la DB
         cursor.execute(sqlventa,datosVenta) # Ejecutamos el guardado
         conn.commit() # Cerramos conexion
-        return render_template("/prueba.html",resumen=resumen) # Renderizamos el HTML con el resumen de la cuenta
+        return render_template("/resumen.html",resumen=resumen) # Renderizamos el HTML con el resumen de la cuenta
     else: # Si la lista de pedidos estaba vacia
         flash("La mesa no contenia ningun pedido") # Creamos un mensaje con la avertencia
         return redirect("/mesas") # Redireccionamos a mesas

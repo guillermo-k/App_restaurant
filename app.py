@@ -1,11 +1,12 @@
 import json
+from re import I
 from flask import Flask,redirect,render_template,request,session,flash
 from flaskext.mysql import MySQL
 from datetime import datetime
 import os #Nos permite acceder a los archivos
 from flask import send_from_directory #Acceso a las carpetas
 import cryptocode
-os.system("c:/xampp/xampp_start.exe")
+# os.system("c:/xampp/xampp_start.exe")
 
 
 cantidad_mesas=0
@@ -340,6 +341,24 @@ def cerrarCuenta(mesa):
     else: # Si la lista de pedidos estaba vacia
         flash("La mesa no contenia ningun pedido") # Creamos un mensaje con la avertencia
         return redirect("/mesas") # Redireccionamos a mesas
+
+
+@app.route('/ventas')
+def ventas():
+    if "super" in session: # Si es un super usuario
+        conn = mysql.connect() #Creamos la conexión
+        cursor = conn.cursor() # Establecemos la conexión
+        cursor.execute("SELECT * FROM `my_resto`.`ventas`")
+        ventas=list(cursor.fetchall())
+        total=0
+        for i in range(len(ventas)):
+            ventas[i]=list(ventas[i])
+            ventas[i][4]=ventas[i][4][1:-1].split(",")
+            total+=ventas[i][5]
+        conn.commit()
+        return render_template("ventas.html",ventas=ventas,total=total)
+    return redirect("/mesas")
+
 
 
 if __name__ == '__main__':

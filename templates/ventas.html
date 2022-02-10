@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+historial
+{% endblock %}
+
+{% block header %}
+Historial
+{% endblock %}
+
+
+{% block main %}
+<!-- (1, 4, datetime.datetime(2022, 2, 8, 14, 46, 39), datetime.datetime(2022, 2, 8, 15, 14, 54), '{"Piza": 5}', 1000) -->
+<table>
+    <thead>
+        <th>Mesa</th>
+        <th>Apertura</th>
+        <th>Cierre</th>
+        <th>Consumido</th>
+        <th>Monto</th>
+    </thead>
+    <tbody>
+        {% for venta in ventas %}
+        <tr>
+            <td>{{venta[1]}}</td>
+            <td>{{venta[2]}}</td>
+            <td>{{venta[3]}}</td>
+            <td>{% for it in venta[4] %}
+                {{it}} <br>
+                {% endfor %}
+            </td>
+            <td>$ {{venta[5]}}</td>
+        </tr>
+        {% endfor %}
+        <tr><td></td><td></td><td></td><td>TOTAL</td><td>$ {{total}}</td></tr>
+    </tbody>
+</table>
+<!-- {{ventas}} -->
+{{a}}
+{% endblock %}

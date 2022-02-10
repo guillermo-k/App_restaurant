@@ -34,21 +34,6 @@
         {% endblock %}
     </header>
     <Nav class="nav1">
-        <!-- <span>
-            <a href="/"><button>INICIO</button></a>
-            </span>
-
-            <span class="b">
-                <a href="/productos/0"> <button>PRODUCTOS</button></a>
-            </span>
-
-            <span class="b">
-                <a href="/ubicacion"><button> UBICACIÓN</button></a>
-            </span>
-
-            <span class="b">
-                <a href="/comentarios"><button> COMENTARIOS</button></a>
-            </span> -->
             {% if "username" in session %}
             <span>
                 <a href="/logout"><button>Cerrar sesión</button></a>
@@ -58,6 +43,9 @@
             </span>
             <span>
                 <a href="/mesas"><button>Mesas</button></a>
+            </span>
+            <span>
+                <a href="/ventas"><button>Historial</button></a>
             </span>
             {% endif %}
     </Nav>

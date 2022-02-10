@@ -70,7 +70,7 @@ def ingresar():
             session["username"]=usuario[0][0] # Creamos la cookie para validar que es un usuario registrado
             if usuario[0][2]: # Si el usuario es super usuario
                 session["super"]=usuario[0][2] # Creamos la cookie para validar que es un super usuario
-            return redirect("/mesas")
+            return redirect("/selecion_mesas")
         else: # Si los datos ingresados no se corresponden con el de un usuario registrado
             flash("Usuario o contraseña erroneos") # Escribimos un mensaje al usuario
             return redirect("/") # y lo enviamos a la pagina de login
@@ -343,20 +343,28 @@ def cerrarCuenta(mesa):
         return redirect("/mesas") # Redireccionamos a mesas
 
 
+"""Renderizacion de ventas.html(donde se vera un listado de todas las ventas realizadas historicas)"""
 @app.route('/ventas')
 def ventas():
     if "super" in session: # Si es un super usuario
         conn = mysql.connect() #Creamos la conexión
         cursor = conn.cursor() # Establecemos la conexión
-        cursor.execute("SELECT * FROM `my_resto`.`ventas`")
-        ventas=list(cursor.fetchall())
-        total=0
-        for i in range(len(ventas)):
-            ventas[i]=list(ventas[i])
-            ventas[i][4]=ventas[i][4][1:-1].split(",")
-            total+=ventas[i][5]
-        conn.commit()
-        return render_template("ventas.html",ventas=ventas,total=total)
+        cursor.execute("SELECT * FROM `my_resto`.`ventas`") # Traemos el historial de ventas
+        ventas=list(cursor.fetchall()) # Lo almacenamos en variable y transformamos en lista
+        total=0 # Establecemos la variable del total cobrado por las ventas
+        for i in range(len(ventas)): # Iteramos el diccionario y obtenemos el index
+            ventas[i]=list(ventas[i]) # Convertimos en lista cada uno de los items
+            ventas[i][4]=ventas[i][4][1:-1].split(",") # De los pedidos, limpiamos el texto, y lo separamos por plato
+            total+=ventas[i][5] # Sumamos el monto abonado en esta venta al acumulado
+        conn.commit() # Cerramos conexion
+        return render_template("ventas.html",ventas=ventas,total=total) #Renderizamos el HTML y pasamos los datos para la misma
+    flash("Usuario no autorizado a ver el historial") # Si no es super usuario creamos un mensaje
+    return redirect("/mesas") # Redirigimos a mesas
+
+@app.route('/seleccion_mesas')
+def seleccionmesas():
+    global cantidad_mesas
+    cantidad_mesas=int(request.form["cantidad_mesas"])
     return redirect("/mesas")
 
 

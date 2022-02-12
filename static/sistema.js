@@ -1,21 +1,22 @@
 
 
-function desplegar(id,display="block") {
+function desplegar(id) {
     var x = document.getElementById(id);
     if (x.style.display === "none") {
         document.getElementById("agregarUsuario").style.display = "none";
         document.getElementById("editarUsuario").style.display = "none";
         document.getElementById("agregarPlato").style.display = "none";
-        x.style.display = display;
+        document.getElementById("cantidadMesas").style.display = "none";
+        x.style.display = "block";
     } else {
         x.style.display = "none";
     }
 }
-function ver(id,display="block") {
+function ver(id) {
     var x = document.getElementById(id);
     var y = document.getElementsByClassName(id)
     if (x.style.display === "none") {
-        x.style.display = display;
+        x.style.display = "block";
         y[0].innerHTML="Ocultar"
     } else {
         x.style.display = "none";

@@ -16,7 +16,8 @@
 }
 
 header{
-    color:#aad0e8;
+    /* color:#aeaae8; */
+    color:#4e3a23;
     font-size: 2.5rem;
     font-family: 'inconsolata';
 }
@@ -38,13 +39,7 @@ body{
     min-height: 100%;
     position: relative;
 }
-#whatsapp{
-    color: #00bb2d;
-}
 
-#facebook{
-    color: #3b5998;
-}
 .checkbox{
 width: 1.5rem;
 height: 1.5rem;
@@ -89,16 +84,6 @@ p{
     padding: 3,4rem;
 }
 
-.diseño{
-    position: relative;
-    bottom: 0px;
-    background-color: rgb(97, 93, 93);
-    font-size: 1.4rem;
-    color: rgb(138, 204, 241);
-    padding: 2.5rem;
-    max-width: 100%;
-    text-align: center;
-}
 
 footer{
     background-color: rgb(10, 3, 6);
@@ -142,44 +127,6 @@ td{
     font-size: 1.4rem;
 }
 
-.filtro{
-    font-size: 1.5vw;
-    font-weight: 600;
-    margin-top: 1.6rem;
-}
-
-.mapa{
-    margin: 4.2rem;
-}
-#lista{
-    align-items: center;
-}
-li{
-    list-style: inside square;
-    font-size: 1.1rem;
-    background-color: #ffa500;
-    width: 13rem;
-    text-align: left;
-    padding: .8rem;
-}
-li a{
-    color: black;
-}
-
-.formularios{
-    display: grid;
-    grid-template-columns: 1fr,1fr;
-    margin-bottom: 2.5rem;
-    font-size: 1.5rem;
-}
-
-.recetas{
-    grid-column: 1/2;
-}
-.comentarios{
-    grid-column: 2/3;
-}
-
 input, textarea{
     border-radius: 7px;
     font-size: 1.3rem;
@@ -198,13 +145,7 @@ form div{
     vertical-align: middle;
 }
 
-.estrella{
-    width: 1rem;
-}
-#cerrar{
-    background-color: firebrick;
-    color: floralwhite;
-}
+
 [type="submit"]{
     background-color: rgb(131, 187, 240);
 }

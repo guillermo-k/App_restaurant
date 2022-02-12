@@ -44,8 +44,11 @@
                     <a href="platos/{{mesa[0]}}">
                         <button>Modificar</button>
                     </a><br>
+                    {% if mesa[2] >0 %}
+                    
                     <a href="/cerrar_cuenta/{{mesa[0]}}"><button>Cerrar cuenta</button></a>
                 </td>
+                {% endif %}
                 <!-- Acciones -->
             </tr>
             {% endfor %}

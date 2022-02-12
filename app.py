@@ -277,6 +277,7 @@ def cargarPedido(mesa):
         pedidos={} # Creamos el diccionario para almacenar los pedidos
     keysDB=pedidos.keys() # Listamos los nombres de los platos de los pedidos existentes(lista vacia si no habia pedidos)
     datosForm=request.form # Traemos los nuevos pedidos y los almacenamos en un diccionario
+    
     keysForm=datosForm.keys() # Listamos los nombres de los platos de los nuevos pedidos
     for keyForm in keysForm: # Recorremos el diccionario de pedidos pasados desde el form
         if int(datosForm[keyForm]) !=0: # Si el valor es distinto de 0(se agrego o quito algun plato)

@@ -6,10 +6,10 @@ from datetime import datetime
 import os #Nos permite acceder a los archivos
 from flask import send_from_directory #Acceso a las carpetas
 import cryptocode
-# os.system("c:/xampp/xampp_start.exe")
+os.system("c:/xampp/xampp_start.exe")
 
 
-cantidad_mesas=0
+cantidad_mesas=3
 
 app=Flask(__name__)
 
@@ -70,7 +70,9 @@ def ingresar():
             session["username"]=usuario[0][0] # Creamos la cookie para validar que es un usuario registrado
             if usuario[0][2]: # Si el usuario es super usuario
                 session["super"]=usuario[0][2] # Creamos la cookie para validar que es un super usuario
-            return redirect("/selecion_mesas")
+            global cantidad_mesas
+            cantidad_mesas=int(request.form["cantidad_mesas"])
+            return redirect("/mesas")
         else: # Si los datos ingresados no se corresponden con el de un usuario registrado
             flash("Usuario o contraseña erroneos") # Escribimos un mensaje al usuario
             return redirect("/") # y lo enviamos a la pagina de login

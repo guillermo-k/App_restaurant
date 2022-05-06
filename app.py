@@ -1,19 +1,17 @@
 import json
-from re import I
 from flask import Flask,redirect,render_template,request,session,flash
 from flaskext.mysql import MySQL
 from datetime import datetime
 import os #Nos permite acceder a los archivos
 from flask import send_from_directory #Acceso a las carpetas
 import cryptocode
-os.system("c:/xampp/xampp_start.exe")
-
+os.system('c:/xampp/xampp_start.exe')
 
 cantidad_mesas=3
 
 app=Flask(__name__)
 
-app.secret_key="123Prueba!"
+app.secret_key='123Prueba!'
 mysql = MySQL()
 app.config['MYSQL_DATABASE_HOST']='localhost' # Configuración de host DB
 app.config['MYSQL_DATABASE_USER']='root' # Configuración de usuario DB
@@ -41,7 +39,7 @@ cursor.execute("SELECT count(*) FROM `my_resto`.`usuarios`") # Obtenemos la cant
 cantidadDeUsuarios=cursor.fetchone()[0] # Asignamos lo obtenido en una variable
 
 if cantidadDeUsuarios==0: # Si no hay ningun usuario registrado
-    clave=cryptocode.encrypt("admin",app.secret_key) # Encriptamos el password para guardarlo en DB
+    clave=cryptocode.encrypt('admin',app.secret_key) # Encriptamos el password para guardarlo en DB
     cursor.execute("INSERT `my_resto`.`usuarios`(`usuario`,`password`,`super_usuario`) VALUES ('admin', %s, 1);",(clave)) # Creamos un super usuario admin : admin para poder iniciar la aplicacion(luego se podra editar)
 conn.commit() # Cerramos conexión con DB
 
@@ -49,14 +47,14 @@ conn.commit() # Cerramos conexión con DB
 # Renderizacion de pagina de ingreso(LOGIN)
 @app.route('/')
 def login():
-   return render_template("/index.html")
+   return render_template('/index.html')
 
 # Procesado del login
 @app.route('/ingresar', methods=['POST']) # Recibimos los datos del formulario correspondiente
 def ingresar():
     # Obtenemos desde el form los datos correspondientes
-    nombre=request.form["txtUsuario"]
-    password=request.form["txtPassword"]
+    nombre=request.form['txtUsuario']
+    password=request.form['txtPassword']
     sql="SELECT * FROM `my_resto`.`usuarios` WHERE `usuario` LIKE %s" # Definimos la busqueda los datos del usuario según el nombre de usuario
     conn = mysql.connect() #Creamos la conexión
     cursor = conn.cursor() # Establecemos la conexión
@@ -67,23 +65,23 @@ def ingresar():
     if usuario!=(): # Si se encontró el nombre de usuario en la DB
         clave2=cryptocode.decrypt(usuario[0][1],app.secret_key) # Desencriptamos lel password obtenido de la DB
         if password==clave2: # Si el password ingresado coincide con el correspondiente en la DB
-            session["username"]=usuario[0][0] # Creamos la cookie para validar que es un usuario registrado
+            session['username']=usuario[0][0] # Creamos la cookie para validar que es un usuario registrado
             if usuario[0][2]: # Si el usuario es super usuario
-                session["super"]=usuario[0][2] # Creamos la cookie para validar que es un super usuario
+                session['super']=usuario[0][2] # Creamos la cookie para validar que es un super usuario
             global cantidad_mesas
-            cantidad_mesas=int(request.form["cantidad_mesas"])
-            return redirect("/mesas")
+            cantidad_mesas=int(request.form['cantidad_mesas'])
+            return redirect('/mesas')
         else: # Si los datos ingresados no se corresponden con el de un usuario registrado
-            flash("Usuario o contraseña erroneos") # Escribimos un mensaje al usuario
-            return redirect("/") # y lo enviamos a la pagina de login
+            flash('Usuario o contraseña erroneos') # Escribimos un mensaje al usuario
+            return redirect('/') # y lo enviamos a la pagina de login
     else: # Si no se encontró el nombre de usuario en la DB
-        flash("Usuario o contraseña erroneos") # Escribimos un mensaje al usuario
-        return redirect("/") # Lo enviamos a la pagina de login
+        flash('Usuario o contraseña erroneos') # Escribimos un mensaje al usuario
+        return redirect('/') # Lo enviamos a la pagina de login
 
 # Renderizado de la pagina Mesas, listado de las mesas con acceso a cargar pedidos y cerrar mesa
-@app.route('/mesas')
+@app.route('/mesas/')
 def mesas():
-    if "username" in session: # Si es usuario registrado
+    if 'username' in session: # Si es usuario registrado
         conn = mysql.connect() #Creamos la conexión
         cursor = conn.cursor() # Establecemos la conexión
         cursor.execute("SELECT `id_mesa`,`pedidos` FROM `my_resto`.`mesas`") # Traemos el numero de las mesas y los pedidos de las mismas
@@ -92,35 +90,35 @@ def mesas():
         for indiceMesa in range(len(mesas)): # Para cada mesa dentro de la lista, tomamos el indice
             suma=0 # Establecemos la cuenta(monto a pagar or el cliente) en 0
             mesas[indiceMesa]=list(mesas[indiceMesa]) # Convertimos la tupla en lista para poder manejar los datos
-            mesas[indiceMesa][1]=(str(mesas[indiceMesa][1])[1:-1]).split(",") # Limpiamos los datos para obtener los pedidos
+            mesas[indiceMesa][1]=(str(mesas[indiceMesa][1])[1:-1]).split(',') # Limpiamos los datos para obtener los pedidos
             for indicePedido in range(len(mesas[indiceMesa][1])): # Para cada pedido dentro de la lista, tomamos el indice
-                plato=mesas[indiceMesa][1][indicePedido].split(": ") # Separamos el nombre del plato y la cantidad
+                plato=mesas[indiceMesa][1][indicePedido].split(': ') # Separamos el nombre del plato y la cantidad
                 cursor.execute("SELECT `precio` FROM `my_resto`.`platos` WHERE `nombre` LIKE %s;",(plato[0].strip()[1:-1])) # Obtenemos el precio individual del plato por su nombre
                 precio=cursor.fetchall() # Lo almacenamos en variable
                 if len(mesas[indiceMesa][1][indicePedido])>3: # Si ya hay pedidos cargados
                     mesas[indiceMesa][1][indicePedido]=(mesas[indiceMesa][1][indicePedido],precio[0][0]*int(plato[1])) # Agregamos el monto ( obtenido multiplicando la cantidad por el precio) a la lista para pasarla al HTML
                     suma+=precio[0][0]*int(plato[1]) # Calculamos el monto de los pedidos acumulados
                 else: # Si no hay pedidos previos
-                    mesas[indiceMesa][1][indicePedido]=["Sin pedidos",0] # Modificamos el item pedidos para mostrar algo en el HTML
+                    mesas[indiceMesa][1][indicePedido]=['Sin pedidos',0] # Modificamos el item pedidos para mostrar algo en el HTML
             mesas[indiceMesa].append(suma) # Agregamos el monto total a la lista para mostrarlo en el HTML
         mesas=mesas[:cantidad_mesas] # Acotamos la cantidad de mesas a el numero indicado por el usuario
-        return render_template("/mesas.html",mesas=mesas) # Renderizamos mesas.html y pasamos los datos a mostrar
+        return render_template('/mesas.html',mesas=mesas) # Renderizamos mesas.html y pasamos los datos a mostrar
     else: # Si los datos ingresados no se corresponden con el de un usuario registrado
-        flash("Debe registrarse antes") # Escribimos un mensaje al usuario
-        return redirect("/") # y lo enviamos a la pagina de login
+        flash('Debe registrarse antes') # Escribimos un mensaje al usuario
+        return redirect('/') # y lo enviamos a la pagina de login
 
 #procesamiento de logout
-@app.route('/logout')
+@app.route('/logout/')
 def logout():
-   session.pop("username", None)#Borramos la cookie
-   session.pop("super", None)#Borramos la cookie
-   return redirect("/") #Redireccionamos a la pagina de inicio,LOGIN
+   session.pop('username', None)#Borramos la cookie
+   session.pop('super', None)#Borramos la cookie
+   return redirect('/') #Redireccionamos a la pagina de inicio,LOGIN
 
 
 # Renderizado de la pagina platos(listado del menu disponible, con nombre, descripcion, precio y foto de cada plato(desde la cual se podran agregar o restar platos al pedido de la mesa pasada por parametro))
-@app.route("/platos/<int:id_mesa>")
+@app.route('/platos/<int:id_mesa>/')
 def platos(id_mesa):
-    if "username" in session: # Si es usuario registrado
+    if 'username' in session: # Si es usuario registrado
         sql=("SELECT `pedidos` FROM `my_resto`.`mesas` WHERE`id_mesa` LIKE %s ;") # Traemos la lista de pedidos de la mesa en cuestion
         conn = mysql.connect() #Creamos la conexión
         cursor = conn.cursor() # Establecemos la conexión
@@ -129,32 +127,35 @@ def platos(id_mesa):
         cursor.execute("SELECT * FROM `my_resto`.`platos`;") # Traemos la el menu
         platos=cursor.fetchall() # Lo almacenamos en variable
         conn.commit() # Cerramos conexion
-        return render_template("platos.html",platos=platos, mesa=id_mesa) # Renderizamos platos.html pasando el menu y el numero de mesa
+        return render_template('platos.html',platos=platos, mesa=id_mesa) # Renderizamos platos.html pasando el menu y el numero de mesa
     else: # Si no es usuario registrado
-        return redirect("/") #Redireccionamos a la pagina de inicio,LOGIN
+        return redirect('/') #Redireccionamos a la pagina de inicio,LOGIN
 
 
 """Renderizado de administracion.HTML(Desde donde se podra: editar los datos de usuario, agrgar uno nuevo; editar, eliminar, o agregar un plato al menu; y configurar la cantidad de mesas)"""
-@app.route("/administracion")
+@app.route('/administracion/')
 def administracion():
-    if "username" in session: # Si es usuario registrado
+    if 'username' in session: # Si es usuario registrado
         conn = mysql.connect() #Creamos la conexión# Se conecta a la conexión mysql.init_app(app)
         cursor = conn.cursor() # Establecemos la conexión 
         cursor.execute("SELECT * FROM `my_resto`.`platos`;") # Traemos el menu
         platos=cursor.fetchall() # Lo almacenamos en variable
         conn.commit() # Cerramos conexión
-        return render_template("administracion.html",platos=platos,cantidad=cantidad_mesas) # Renderizamos administracion.html pasando el menu y la cantidad de mesas seleccionadas al momento
+        return render_template('administracion.html',platos=platos,cantidad=cantidad_mesas) # Renderizamos administracion.html pasando el menu y la cantidad de mesas seleccionadas al momento
     else: # Si NO es usuario registrado
         return redirect('/') # Redireccionamos a inicio
 """Borrado de plato por ID"""
 @app.route('/destroy/<int:id>') # Recibe como parámetro el id del producto
 def destroy(id):
-    if "username" in session: # Si es usuario registrado
+    if 'username' in session: # Si es usuario registrado
         conn = mysql.connect() #Creamos la conexión
         cursor = conn.cursor() # Establecemos la conexión
         cursor.execute("SELECT foto FROM `my_resto`.`platos` WHERE id_plato=%s",id) # Buscamos el nombre de la foto
         fila= cursor.fetchall() # Almacenamos en variable
-        os.remove(os.path.join(app.config['CARPETA'], fila[0][0])) # Elimina la foto de la carpeta
+        try:
+            os.remove(os.path.join(app.config['CARPETA'], fila[0][0])) # Elimina la foto de la carpeta
+        except:
+            pass
         cursor.execute("DELETE FROM `my_resto`.`platos` WHERE id_plato=%s", (id)) # Eliminamos el producto de la DB por su ID
         conn.commit() # Cerramos la conexión
         return redirect('/administracion') # Volvemos a la pagina de administración
@@ -163,7 +164,7 @@ def destroy(id):
 """Renerizado de edit.HTML(Formulario para editar el plato con el ID pasado por parametro)"""
 @app.route('/edit/<int:id>') # Recibe como parámetro el id del plato
 def edit(id):
-    if "username" in session: # Si es usuario registrado
+    if 'username' in session: # Si es usuario registrado
         conn = mysql.connect() #Creamos la conexión
         cursor = conn.cursor() # Establecemos la conexión
         cursor.execute("SELECT * FROM `my_resto`.`platos` WHERE id_plato=%s", (id)) # Buscamos el plato de la DB por su id
@@ -174,25 +175,25 @@ def edit(id):
         return redirect('/') # Redireccionamos a Inicio
 
 """Realizar el ingreso en tabla de un nuevo plato, o las modificaciones de uno existente"""
-@app.route("/update/", methods=['POST']) # Recibimos los datos desde el formulario de creacion
+@app.route('/update', methods=['POST']) # Recibimos los datos desde el formulario de creacion
 @app.route('/update/<int:id_plato>', methods=['POST']) # Recibimos los datos desde el formulario de edición, del producto a editar
 def update(id_plato=None):
-    if "username" in session: # Si es usuario registrado
+    if 'username' in session: # Si es usuario registrado
         # Obtenemos los datos correspondientes desde el form y los almacenamos
-        nombre=request.form['txtNombre'].capitalize().replace(" ","_")
+        nombre=request.form['txtNombre'].capitalize().replace(' ','_')
         descripcion_plato=request.form['txtDescripcionPlato'].capitalize()
         precio=float(request.form['txtPrecio'])
         foto=request.files['txtFoto']
         now=datetime.now() # Obtenemos la fecha y hora para asignarla al nombre de la foto
-        tiempo=now.strftime("%Y%H%M%S_") # Obtenemos de la fecha el año, la hora, los minutos y segundos
-        extension=foto.filename.split(".") # Obtenemos la extensión del archivo de la foto
-        if foto.filename !="": # Si el campo foto no esta vacío
-            nuevoNombreFoto=tiempo+nombre+"."+extension[1] # Creamos el nombre de la foto
-            foto.save("fotos/"+nuevoNombreFoto) # Guardamos la foto en la carpeta correspondiente
+        tiempo=now.strftime('%Y%H%M%S_') # Obtenemos de la fecha el año, la hora, los minutos y segundos
+        extension=foto.filename.split('.') # Obtenemos la extensión del archivo de la foto
+        if foto.filename !='': # Si el campo foto no esta vacío
+            nuevoNombreFoto=tiempo+nombre+'.'+extension[1] # Creamos el nombre de la foto
+            foto.save('fotos/'+nuevoNombreFoto) # Guardamos la foto en la carpeta correspondiente
         else: # Si no se adjunto un archivo
             nuevoNombreFoto=request.form['viejoNombreFoto'] #
-            if nuevoNombreFoto=="":
-                nuevoNombreFoto="Sin foto" # Ingresamos texto a mostrar en lugar de la foto
+            if nuevoNombreFoto=='':
+                nuevoNombreFoto='Sin foto' # Ingresamos texto a mostrar en lugar de la foto
         datos=[nombre,descripcion_plato,precio,nuevoNombreFoto] # Agrupamos los datos para la sentencia SQL
         if id_plato!=None: # Si se paso un ID de plato
             datos.append(id_plato) # Lo agregamos a los datos para la sentencia SQL
@@ -213,12 +214,12 @@ def uploads(nombreFoto):
     return send_from_directory(app.config['CARPETA'], nombreFoto) # Guardamos la foto en la carpeta destinada a tal fin, con su nombre correspondiente
 
 """Creacion de nuevo usuario, para hacerlo, es necesario ser super usuario"""
-@app.route('/crear_usuario', methods=['POST']) # Recibimos los datos del formulario
+@app.route('/crear_usuario/', methods=['POST']) # Recibimos los datos del formulario
 def crear_usuario():
-    if "super" in session: # Si es un super usuario
-        nuevoUsuario=request.form["txtUsuario"] # Nombre de nuevo usuario
+    if 'super' in session: # Si es un super usuario
+        nuevoUsuario=request.form['txtUsuario'] # Nombre de nuevo usuario
         nuevoPassword=request.form['txtPassword'] # Password de nuevo usuario
-        super=request.form.get("superUsuario") # Valor de super usuario
+        super=request.form.get('superUsuario') # Valor de super usuario
         nuevoPassword=cryptocode.encrypt(nuevoPassword,app.secret_key) # Encriptamos el password
         usuario1=nuevoUsuario,nuevoPassword,super #Agrupamos los datos
         sql="INSERT INTO `my_resto`.`usuarios` (`usuario`, `password`,`super_usuario`) VALUES (%s, %s,%s)" # Creamos la sentencia de creacion de nuevo usuario
@@ -233,18 +234,18 @@ def crear_usuario():
         if nuevoUsuario not in usuarios: # Si el nuevo nombre de usuario no existe en la tabla(ya que debe ser único)
             cursor.execute(sql,usuario1) # Creamos el usuario
         else: # Si el nombre ya existe, solicitamos que use otro
-            flash("Nombre de usuario no disponible")
+            flash('Nombre de usuario no disponible')
         conn.commit() # Cerramos conexión
         return redirect('/administracion') # Retornamos a administracion
     else:
-        flash("Usted no tiene los permisos para agregar un nuevo usuario")
+        flash('Usted no tiene los permisos para agregar un nuevo usuario')
         return redirect('/') #Redireccionamos a la pagina de login
 
 """Edicion datos usuario(propios)"""
-@app.route("/modificar_usuario", methods=['POST']) # recibimos los datos del formulario correspondiente
+@app.route('/modificar_usuario/', methods=['POST']) # recibimos los datos del formulario correspondiente
 def modificar_usuario():
-    if "username" in session: # Si es un usuario registrado
-        nuevoNombre=request.form["txtUsuario"] # Nuevo nombre de usuario
+    if 'username' in session: # Si es un usuario registrado
+        nuevoNombre=request.form['txtUsuario'] # Nuevo nombre de usuario
         nuevoPassword=request.form['txtPassword'] # Nuevo password de usuario
         nuevoPassword=cryptocode.encrypt(nuevoPassword,app.secret_key) # Encriptamos el password
         usuario1=(nuevoNombre,nuevoPassword,usuario[0][0]) # Agrupamos los datos, junto al nombre viejo del usuario
@@ -256,7 +257,7 @@ def modificar_usuario():
         if nuevoNombre not in usuarios or nuevoNombre==usuario[0][0]: # Si el nuevo nombre de usuario no existe en la tabla, o si es igual al nombre viejo
             cursor.execute(sql,usuario1) # Hacemos la actualización del usuario
         else: # Si el nuevo nombre de usuario existe en la tabla, y no es igual al nombre viejo
-            flash("Nombre de usuario no disponible") # Escribimos un mensaje al usuario
+            flash('Nombre de usuario no disponible') # Escribimos un mensaje al usuario
         conn.commit() # Cerramos la conexión
         return redirect('/administracion') # Retornamos a la pagina administracion
 
@@ -283,7 +284,7 @@ def cargarPedido(mesa):
         if int(datosForm[keyForm]) !=0: # Si el valor es distinto de 0(se agrego o quito algun plato)
             valor=int(datosForm[keyForm]) # Convertimos el valor en entero
             if keyForm in keysDB: # Si el pedido pasado por form es de un plato que ya se ha pedido previamente
-                if (int(pedidos[keyForm])+valor)>0: # Si la suma entre pedido del form con el pedido previo es mayor que 0(para evitar platos con cantidad negativa)
+                if (int(pedidos[keyForm])+valor)>0: # Si la suma entre pedido del form con el pedido previo es mayor que 0 (para evitar platos con cantidad negativa)
                     pedidos[keyForm]=int(pedidos[keyForm])+valor # Sumamos el pedido previo con el nuevo
                 else: # Si la cantidad resultante es 0 o menor 
                     pedidos.pop(keyForm) # Borramos el plato de la lista de pedidos
@@ -295,7 +296,7 @@ def cargarPedido(mesa):
     valores=(json.dumps(pedidos),mesa) # Agrupamos los datos(convirtiendo el diccionario en Json para su almacenamiento)
     cursor.execute(sql,valores) # Ejecutamos la sentencia
     conn.commit() # Cerramos la conexion
-    return redirect("/mesas") # Redirecionamos a mesas
+    return redirect('/mesas/') # Redirecionamos a mesas
 
 """Establecimiento de la cantidad de mesas del negocio"""
 @app.route('/cantidad_mesas/', methods=['POST'])
@@ -340,16 +341,16 @@ def cerrarCuenta(mesa):
         sqlventa="INSERT `my_resto`.`ventas` (`mesa`, `hora_abre`, `hora_cierra`, `consumo`, `total`) VALUES(%s,%s,%s,%s,%s);" # Creamos la sentencia para guardar la venta en la DB
         cursor.execute(sqlventa,datosVenta) # Ejecutamos el guardado
         conn.commit() # Cerramos conexion
-        return render_template("/resumen.html",resumen=resumen) # Renderizamos el HTML con el resumen de la cuenta
+        return render_template('/resumen.html',resumen=resumen) # Renderizamos el HTML con el resumen de la cuenta
     else: # Si la lista de pedidos estaba vacia
-        flash("La mesa no contenia ningun pedido") # Creamos un mensaje con la avertencia
-        return redirect("/mesas") # Redireccionamos a mesas
+        flash('La mesa no contenia ningun pedido') # Creamos un mensaje con la avertencia
+        return redirect('/mesas') # Redireccionamos a mesas
 
 
 """Renderizacion de ventas.html(donde se vera un listado de todas las ventas realizadas historicas)"""
-@app.route('/ventas')
+@app.route('/ventas/')
 def ventas():
-    if "super" in session: # Si es un super usuario
+    if 'super' in session: # Si es un super usuario
         conn = mysql.connect() #Creamos la conexión
         cursor = conn.cursor() # Establecemos la conexión
         cursor.execute("SELECT * FROM `my_resto`.`ventas`") # Traemos el historial de ventas
@@ -357,18 +358,18 @@ def ventas():
         total=0 # Establecemos la variable del total cobrado por las ventas
         for i in range(len(ventas)): # Iteramos el diccionario y obtenemos el index
             ventas[i]=list(ventas[i]) # Convertimos en lista cada uno de los items
-            ventas[i][4]=ventas[i][4][1:-1].split(",") # De los pedidos, limpiamos el texto, y lo separamos por plato
+            ventas[i][4]=ventas[i][4][1:-1].split(',') # De los pedidos, limpiamos el texto, y lo separamos por plato
             total+=ventas[i][5] # Sumamos el monto abonado en esta venta al acumulado
         conn.commit() # Cerramos conexion
-        return render_template("ventas.html",ventas=ventas,total=total) #Renderizamos el HTML y pasamos los datos para la misma
-    flash("Usuario no autorizado a ver el historial") # Si no es super usuario creamos un mensaje
-    return redirect("/mesas") # Redirigimos a mesas
+        return render_template('ventas.html',ventas=ventas,total=total) #Renderizamos el HTML y pasamos los datos para la misma
+    flash('Usuario no autorizado a ver el historial') # Si no es super usuario creamos un mensaje
+    return redirect('/mesas') # Redirigimos a mesas
 
-@app.route('/seleccion_mesas')
+@app.route('/seleccion_mesas/')
 def seleccionmesas():
     global cantidad_mesas
-    cantidad_mesas=int(request.form["cantidad_mesas"])
-    return redirect("/mesas")
+    cantidad_mesas=int(request.form['cantidad_mesas'])
+    return redirect('/mesas')
 
 
 

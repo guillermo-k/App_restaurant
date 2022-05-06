@@ -1,16 +1,15 @@
-# Documentación del proyecto - Resto 1919
+# Aplicación para administración de un restaurante
 
-Descripción del proyecto
-
-## Recursos
-
-
-## Arquitectura
-
-
-## Backend
-
-
-## Frontend
-
+Pasos para correr el proyecto localmente:
+1. Recomendamos la creación de un entorno virtual.
+2. Instalar las dependencias del proyecto:
+   ```bash
+   $ pip3 install -r requirements.txt
+   ```
+3. Instalar MySQL
+   ```bash
+   sudo apt update
+   sudo apt install mysql-server
+   sudo systemctl start mysql.service
+   ```
 

@@ -15,9 +15,9 @@ app=Flask(__name__)
 
 app.secret_key="123Prueba!"
 mysql = MySQL()
-app.config['MYSQL_DATABASE_HOST']='localhost' # Configuración de host DB
-app.config['MYSQL_DATABASE_USER']='root' # Configuración de usuario DB
-app.config['MYSQL_DATABASE_PASSWORD']='' # Contraseña DB
+app.config['MYSQL_DATABASE_HOST']='localhost'
+app.config['MYSQL_DATABASE_USER']='root'
+app.config['MYSQL_DATABASE_PASSWORD']=''
 
 
 mysql.init_app(app) # Inicialización de SQL

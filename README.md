@@ -4,7 +4,7 @@ Pasos para correr el proyecto localmente:
 - Recomendamos la creación de un entorno virtual.
 - Instalar las dependencias del proyecto:
   ```bash
-  $ pip3 install -r requirements.txt
+  pip3 install -r requirements.txt
   ```
 - Instalar MySQL
   ```bash
@@ -14,6 +14,13 @@ Pasos para correr el proyecto localmente:
   sudo mysql_secure_installation
   ```
   Para verificar si es posible acceder a la terminal de MySQL: `sudo mysql`
+- Instalar [XAMPP](https://www.apachefriends.org/download.html)
+  ```bash
+  cd /home/[username]/Downloads
+  chmod a+x xampp-linux-*-installer.run
+  sudo ./xampp-linux-*-installer.run
+  ```
+  Luego de correr los comandos anteriores, seguir con la instalación gráfica.
 
 - Correr la app:
   ```bash

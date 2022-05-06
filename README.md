@@ -1,17 +1,23 @@
 # Aplicación para administración de un restaurante
 
 Pasos para correr el proyecto localmente:
-1. Recomendamos la creación de un entorno virtual.
-2. Instalar las dependencias del proyecto:
-   ```bash
-   $ pip3 install -r requirements.txt
-   ```
-3. Instalar MySQL
-   ```bash
-   sudo apt update
-   sudo apt install mysql-server
-   sudo systemctl start mysql.service
-   sudo mysql_secure_installation
-   ```
-   Para verificar si es posible acceder a la terminal de MySQL: `sudo mysql`
+- Recomendamos la creación de un entorno virtual.
+- Instalar las dependencias del proyecto:
+  ```bash
+  $ pip3 install -r requirements.txt
+  ```
+- Instalar MySQL
+  ```bash
+  sudo apt update
+  sudo apt install mysql-server
+  sudo systemctl start mysql.service
+  sudo mysql_secure_installation
+  ```
+  Para verificar si es posible acceder a la terminal de MySQL: `sudo mysql`
 
+- Correr la app:
+  ```bash
+  export FLASK_APP=app; export FLASK_ENV=development; flask run
+  ```
+
+  En Ubuntu, caso de recibir el error, **(1698, "Access denied for user 'root'@'localhost'")**, [consultar aquí](https://stackoverflow.com/questions/39281594/error-1698-28000-access-denied-for-user-rootlocalhost)

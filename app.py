@@ -31,11 +31,11 @@ cursor.execute("CREATE DATABASE IF NOT EXISTS `my_resto`;") # Creamos la base de
 
 cursor.execute("CREATE TABLE IF NOT EXISTS `my_resto`.`platos` ( `id_plato` INT(10) NOT NULL AUTO_INCREMENT , `nombre` VARCHAR(255) NOT NULL , `descripcion_plato` VARCHAR(5000) NOT NULL , `precio` FLOAT NOT NULL , `foto` VARCHAR(5000) NOT NULL , PRIMARY KEY (`id_plato`) );") # Creamos la tabla platos(platos ofrecidos con nombre, descripcion precio y foto)
 
-cursor.execute("CREATE TABLE IF NOT EXISTS `my_resto`.`mesas` ( `id_mesa` INT(10) NOT NULL AUTO_INCREMENT , `pedidos` JSON DEFAULT '{ }', `hora_abre` DATETIME , PRIMARY KEY (`id_mesa`));") # Creamos la tabla mesas (mesas del restaurant con numero de mesa,hora y fecha en que se inicia la mesa(se toma el primer pedido)y pedidos(donde se van a ir cargando los pedidos que realicen los clientes))
+cursor.execute("CREATE TABLE IF NOT EXISTS `my_resto`.`mesas` ( `id_mesa` INT(10) NOT NULL AUTO_INCREMENT , `pedidos` JSON DEFAULT ('{ }'), `hora_abre` DATETIME , PRIMARY KEY (`id_mesa`));") # Creamos la tabla mesas (mesas del restaurant con numero de mesa,hora y fecha en que se inicia la mesa(se toma el primer pedido)y pedidos(donde se van a ir cargando los pedidos que realicen los clientes))
 
 cursor.execute("CREATE TABLE IF NOT EXISTS `my_resto`.`usuarios`( `usuario` VARCHAR(255) NOT NULL , `password` VARCHAR(500) NOT NULL, `super_usuario` BOOLEAN NULL DEFAULT FALSE, PRIMARY KEY (`usuario`))") # Creamos la tabla usuarios(usuarios registrados con password y opcion de super usuario)
 
-cursor.execute("CREATE TABLE IF NOT EXISTS `my_resto`.`ventas`(`id_venta` INT(20) NOT NULL AUTO_INCREMENT ,`mesa`INT(10), `hora_abre` DATETIME , `hora_cierra` DATETIME, `consumo` JSON DEFAULT '{ }', `total` INT(10), PRIMARY KEY (`id_venta`));")# Creamos la tabla ventas(registro de las ventas de todo el comercio, con numero de mesa, hora de inicio y cierre de atencion, lista de pedidos, y total facturado)
+cursor.execute("CREATE TABLE IF NOT EXISTS `my_resto`.`ventas`(`id_venta` INT(20) NOT NULL AUTO_INCREMENT ,`mesa`INT(10), `hora_abre` DATETIME , `hora_cierra` DATETIME, `consumo` JSON NOT NULL DEFAULT ('{ }'), `total` INT(10), PRIMARY KEY (`id_venta`));")# Creamos la tabla ventas(registro de las ventas de todo el comercio, con numero de mesa, hora de inicio y cierre de atencion, lista de pedidos, y total facturado)
 
 cursor.execute("SELECT count(*) FROM `my_resto`.`usuarios`") # Obtenemos la cantidad de usuarios registrados
 cantidadDeUsuarios=cursor.fetchone()[0] # Asignamos lo obtenido en una variable

@@ -568,7 +568,7 @@ def ventas():
 @app.route('/seleccion_mesas/')
 def seleccionmesas():
     global CANTIDAD_MESAS
-    CANTIDAD_MESAS = int(request.form['CANTIDAD_MESAS'])
+    CANTIDAD_MESAS = int(request.form['cantidad_mesas'])
     return redirect('/mesas')
 
 

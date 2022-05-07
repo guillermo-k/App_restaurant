@@ -150,8 +150,8 @@ def mesas():
                 if len(mesas[indexMesa][1][indicePedido]) > 3:
                     # Agregamos el monto a la lista para pasarla al HTML
                     i = mesas[indexMesa][1]
-                    i[indicePedido] = (i[indicePedido],
-                        precio[0][0]*int(plato[1]))
+                    i[indicePedido] = (
+                        i[indicePedido], precio[0][0]*int(plato[1]))
                     # Calculamos el monto de los pedidos acumulados
                     suma += precio[0][0]*int(plato[1])
                 else:  # Si no hay pedidos previos
@@ -211,8 +211,8 @@ def administracion():
         conn.commit()  # Cerramos conexión
         """Renderizamos administracion.html
         pasando el menu y la cantidad de mesas seleccionadas"""
-        return render_template('administracion.html',
-            platos=platos, cantidad=cantidad_mesas)
+        return render_template(
+                'administracion.html', platos=platos, cantidad=cantidad_mesas)
     else:  # Si NO es usuario registrado
         return redirect('/')  # Redireccionamos a inicio
 

@@ -1,3 +1,4 @@
+from asyncio import exceptions
 import json
 from flask import Flask, redirect, render_template, request, session, flash
 from flaskext.mysql import MySQL
@@ -232,7 +233,7 @@ def destroy(id):
         try:
             # Elimina la foto de la carpeta
             os.remove(os.path.join(app.config['CARPETA'], fila[0][0]))
-        except:
+        except exceptions:
             print('Archivo no encontrado')
         # Eliminamos el producto de la DB por su ID
         sql = "DELETE FROM `my_resto`.`platos` WHERE id_plato=%s"

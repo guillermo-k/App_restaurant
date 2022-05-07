@@ -104,7 +104,7 @@ def ingresar():
         clave2 = cryptocode.decrypt(usuario[0][1], app.secret_key)
         # Si el password ingresado coincide con el correspondiente en la DB
         if password == clave2:
-            session['username'] = usuario[0][0] # Creamos la cookie
+            session['username'] = usuario[0][0]  # Creamos la cookie
             if usuario[0][2]:  # Si el usuario es super usuario
                 # Creamos la cookie para de super usuario
                 session['super'] = usuario[0][2]
@@ -133,7 +133,7 @@ def mesas():
         mesas = cursor.fetchall()  # Lo almacenamos en variable
         mesas = list(mesas)  # Convertimos la tupla en lista
         for indexMesa in range(len(mesas)):
-            suma = 0 #  Establecemos la cuenta(monto a pagar) = 0
+            suma = 0  # Establecemos la cuenta(monto a pagar) = 0
             # Convertimos la tupla en lista
             mesas[indexMesa] = list(mesas[indexMesa])
             # Limpiamos los datos para obtener los pedidos
@@ -151,7 +151,7 @@ def mesas():
                     # Agregamos el monto a la lista para pasarla al HTML
                     i = mesas[indexMesa][1]
                     i[indicePedido] = (i[indicePedido],
-                        precio[0][0]*int(plato[1]))
+                                                precio[0][0]*int(plato[1]))
                     # Calculamos el monto de los pedidos acumulados
                     suma += precio[0][0]*int(plato[1])
                 else:  # Si no hay pedidos previos
@@ -212,7 +212,7 @@ def administracion():
         """Renderizamos administracion.html
         pasando el menu y la cantidad de mesas seleccionadas"""
         return render_template('administracion.html',
-            platos=platos, cantidad=cantidad_mesas)
+                                    platos=platos, cantidad=cantidad_mesas)
     else:  # Si NO es usuario registrado
         return redirect('/')  # Redireccionamos a inicio
 
@@ -503,7 +503,7 @@ def cerrarCuenta(mesa):
         for key in pedidosBorrar:  # Por cada plato dentro de pedidos
             # Almacenamos la cantidad pedida del plato
             cant = pedidosBorrar[key]
-            sql2 = """SELECT `precio` FROM `my_resto`.`platos` 
+            sql2 = """SELECT `precio` FROM `my_resto`.`platos`
                 WHERE `nombre` LIKE %s;"""
             cursor.execute(sql2, key)  # Buscamos el precio unitario del plato
             precio = int(cursor.fetchone()[0])  # Almacenamos el precio

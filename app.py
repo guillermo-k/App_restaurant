@@ -6,7 +6,6 @@ from datetime import datetime
 import os  # Nos permite acceder a los archivos
 from flask import send_from_directory  # Acceso a las carpetas
 import cryptocode
-# os.system('c:/xampp/xampp_start.exe')
 
 cantidad_mesas = 3
 

@@ -8,7 +8,7 @@ from flask import send_from_directory  # Acceso a las carpetas
 import cryptocode
 # os.system('c:/xampp/xampp_start.exe')
 
-cantidad_mesas = 3
+CANTIDAD_MESAS = 3
 
 app = Flask(__name__)
 
@@ -97,20 +97,20 @@ def ingresar():
     conn = mysql.connect()  # Creamos la conexión
     cursor = conn.cursor()  # Establecemos la conexión
     cursor.execute(sql, nombre)  # Ejecutamos la busqueda
-    global usuario  # Declaramos la asignación de variable usuario es global
-    usuario = cursor.fetchall()  # Asignamos el resultado de la busqueda
+    global USUARIO  # Declaramos la asignación de variable usuario es global
+    USUARIO = cursor.fetchall()  # Asignamos el resultado de la busqueda
     conn.commit()  # Cerramos conexión
-    if usuario != ():  # Si se encontró el nombre de usuario en la DB
+    if USUARIO != ():  # Si se encontró el nombre de usuario en la DB
         # Desencriptamos lel password obtenido de la DB
-        clave2 = cryptocode.decrypt(usuario[0][1], app.secret_key)
+        clave2 = cryptocode.decrypt(USUARIO[0][1], app.secret_key)
         # Si el password ingresado coincide con el correspondiente en la DB
         if password == clave2:
-            session['username'] = usuario[0][0]  # Creamos la cookie
-            if usuario[0][2]:  # Si el usuario es super usuario
+            session['username'] = USUARIO[0][0]  # Creamos la cookie
+            if USUARIO[0][2]:  # Si el usuario es super usuario
                 # Creamos la cookie para de super usuario
-                session['super'] = usuario[0][2]
-            global cantidad_mesas
-            cantidad_mesas = int(request.form['cantidad_mesas'])
+                session['super'] = USUARIO[0][2]
+            global CANTIDAD_MESAS
+            CANTIDAD_MESAS = int(request.form['cantidad_mesas'])
             return redirect('/mesas')
         else:  # Si no es un usuario registrado
             flash('Usuario o contraseña erroneos')  # Escribimos un mensaje
@@ -161,7 +161,7 @@ def mesas():
             # Agregamos el monto total a la lista para mostrarlo en el HTML
             mesas[indexMesa].append(suma)
         # Acotamos la cantidad de mesas a el numero indicado por el usuario
-        mesas = mesas[:cantidad_mesas]
+        mesas = mesas[:CANTIDAD_MESAS]
         # Renderizamos mesas.html y pasamos los datos a mostrar
         return render_template('/mesas.html', mesas=mesas)
     # Si los datos ingresados no corresponden con el de un usuario registrado
@@ -213,7 +213,7 @@ def administracion():
         """Renderizamos administracion.html
         pasando el menu y la cantidad de mesas seleccionadas"""
         return render_template(
-                'administracion.html', platos=platos, cantidad=cantidad_mesas)
+                'administracion.html', platos=platos, cantidad=CANTIDAD_MESAS)
     else:  # Si NO es usuario registrado
         return redirect('/')  # Redireccionamos a inicio
 
@@ -380,7 +380,7 @@ def modificar_usuario():
         # Encriptamos el password
         nuevoPassword = cryptocode.encrypt(nuevoPassword, app.secret_key)
         # Agrupamos los datos, junto al nombre viejo del usuario
-        usuario1 = (nuevoNombre, nuevoPassword, usuario[0][0])
+        usuario1 = (nuevoNombre, nuevoPassword, USUARIO[0][0])
         # Armamos la sentencia para la actualización del usuario
         sql = """UPDATE `my_resto`.`usuarios`
         SET `usuario`= %s, `password`= %s WHERE `usuario`=%s;"""
@@ -390,7 +390,7 @@ def modificar_usuario():
         cursor.execute("SELECT `usuario` FROM `my_resto`.`usuarios` ;")
         usuarios = cursor.fetchall()  # Almacenamos los datos en una tupla
         # Si el nuevo nombre de usuario no existe, o es igual al nombre viejo
-        if nuevoNombre not in usuarios or nuevoNombre == usuario[0][0]:
+        if nuevoNombre not in usuarios or nuevoNombre == USUARIO[0][0]:
             cursor.execute(sql, usuario1)  # Actualizamos del usuario
         # Si el nuevo nombre de usuario existe, y no es igual al nombre viejo
         else:
@@ -460,10 +460,10 @@ def cargarPedido(mesa):
 
 @app.route('/cantidad_mesas/', methods=['POST'])
 def cantidadMesas():
-    # Declaramos que la variable cantidad_mesas es a nivel global
-    global cantidad_mesas
+    # Declaramos que la variable CANTIDAD_MESAS es a nivel global
+    global CANTIDAD_MESAS
     # Traemos la cantidad de mesas seleccionada por el usuario desde el form
-    cantidad_mesas = int(request.form['cantidad_mesas'])
+    CANTIDAD_MESAS = int(request.form['cantidad_mesas'])
     conn = mysql.connect()  # Creamos la conexión
     cursor = conn.cursor()  # Establecemos la conexión
     # Contamos la cantidad de mesas existentes en la tabla de la DB
@@ -472,7 +472,7 @@ def cantidadMesas():
     mesas = int(cursor.fetchone()[0])
     """Mientras que la cantidad de mesas existentes sea menor
     que la indicada por el usuario"""
-    while mesas < cantidad_mesas:
+    while mesas < CANTIDAD_MESAS:
         # Creamos una nueva mesa
         cursor.execute("INSERT `my_resto`.`mesas`(`pedidos`) VALUES(NULL)")
         mesas += 1  # Incrementamos la cantidad de mesas existentes
@@ -567,8 +567,8 @@ def ventas():
 
 @app.route('/seleccion_mesas/')
 def seleccionmesas():
-    global cantidad_mesas
-    cantidad_mesas = int(request.form['cantidad_mesas'])
+    global CANTIDAD_MESAS
+    CANTIDAD_MESAS = int(request.form['CANTIDAD_MESAS'])
     return redirect('/mesas')
 
 

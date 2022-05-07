@@ -1,26 +1,37 @@
 {% extends "base.html" %}
 
+{% set active_page = 'inicio' %}
+
 {% block titulo %}
-Login
+    Login
 {% endblock %}
+
+
 
 {% block header %}
-LOGIN
+    {% if "username" not in session %}
+        Ingresá tus datos para empezar
+    {% else %}
+        Ya te has autenticado
+    {% endif %} 
 {% endblock %}
-
 
 {% block main %}
-<h1 class="bienvenida">Bienvenido al "MI SISTEMA", aqui usted podra llevar el control de lo que ordenan en cada una de sus mesas, realizar las cuentas de las mismas, y podra ver un resumen historico de sus ventas</h1>
-
-<form action="/ingresar" method="post" enctype="multipart/form-data">
-    <label for="txtUsuario">Usuario: </label>
-    <input type="text" name="txtUsuario" id="txtUsuario">
-    <br><br>
-    <label for="txtPassword">Contraseña: </label>
-    <input type="password" name="txtPassword" id="txtPassword"><br><br>
-    <label for="cantidad_mesas">Cantidas de mesas:</label>
-    <input type="number" name="cantidad_mesas" id="cantidad_mesas" value="5"><br><br>
-    <input type="submit" value="Ingresar">
-</form>
+    {% if "username" not in session %}
+        <form action="/ingresar" method="post" enctype="multipart/form-data">
+            <label for="txtUsuario">Usuario: </label>
+            <input type="text" name="txtUsuario" id="txtUsuario">
+            <br><br>
+            <label for="txtPassword">Contraseña: </label>
+            <input type="password" name="txtPassword" id="txtPassword"><br><br>
+            <label for="cantidad_mesas">Cantidas de mesas:</label>
+            <input type="number" name="cantidad_mesas" id="cantidad_mesas" value="5"><br><br>
+            <input type="submit" value="Ingresar">
+        </form>
+    {% endif %}        
 {% endblock %}
+       
+
+
+
 

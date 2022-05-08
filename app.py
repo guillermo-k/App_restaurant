@@ -79,13 +79,11 @@ if cantidadDeUsuarios == 0:  # Si no hay ningun usuario registrado
 conn.commit()  # Cerramos conexión con DB
 
 
-# Renderizacion de pagina de ingreso(LOGIN)
 @app.route('/')
 def login():
     return render_template('/index.html')
 
 
-# Procesado del login
 @app.route('/ingresar', methods=['POST'])  # Recibimos datos del formulario
 def ingresar():
     # Obtenemos desde el form los datos correspondientes
@@ -119,12 +117,12 @@ def ingresar():
         return redirect('/')  # Lo redireccionamos a la pagina de login
 
 
-"""Renderizado de la pagina Mesas,
-    listado de las mesas con acceso a cargar pedidos y cerrar mesa"""
-
-
 @app.route('/mesas/')
 def mesas():
+    """
+    Listado de mesas, carga de pedidos por mesa, y cierre de mesa
+    """
+
     if 'username' in session:  # Si es usuario registrado
         conn = mysql.connect()  # Creamos la conexión
         cursor = conn.cursor()  # Establecemos la conexión
@@ -169,7 +167,6 @@ def mesas():
         return redirect('/')  # y lo enviamos a la pagina de login
 
 
-# procesamiento de logout
 @app.route('/logout/')
 def logout():
     session.pop('username', None)  # Borramos la cookie
@@ -177,13 +174,13 @@ def logout():
     return redirect('/')  # Redireccionamos a la pagina de inicio, LOGIN
 
 
-"""Renderizado de la pagina platos (listado del menu disponible, con nombre,
-descripcion, precio y foto de cada plato (desde la cual se podran agregar o
-restar platos al pedido de la mesa pasada por parametro))"""
-
-
 @app.route('/platos/<int:id_mesa>/')
 def platos(id_mesa):
+    """
+    Listado del menu disponible
+    Agregar o quitar platos al pedido
+    """
+
     if 'username' in session:  # Si es usuario registrado
         conn = mysql.connect()  # Creamos la conexión
         cursor = conn.cursor()  # Establecemos la conexión
@@ -196,13 +193,14 @@ def platos(id_mesa):
         return redirect('/')  # Redireccionamos a la pagina de inicio,LOGIN
 
 
-"""Renderizado de administracion.HTML
-(Desde donde se podra: editar los datos de usuario, agrgar uno nuevo; editar,
-eliminar, o agregar un plato al menu; y configurar la cantidad de mesas)"""
-
-
 @app.route('/administracion/')
 def administracion():
+    """
+    Agrega y edita usuarios
+    Agrega o elimina plato del menú
+    Configura la cantidad de mesas
+    """
+
     if 'username' in session:  # Si es usuario registrado
         conn = mysql.connect()  # Creamos la conexión
         cursor = conn.cursor()  # Establecemos la conexión
@@ -217,11 +215,11 @@ def administracion():
         return redirect('/')  # Redireccionamos a inicio
 
 
-"""Borrado de plato por ID"""
-
-
 @app.route('/destroy/<int:id>')  # Recibe como parámetro el id del producto
 def destroy(id):
+    """
+    Borrado de plato por ID
+    """
     if 'username' in session:  # Si es usuario registrado
         conn = mysql.connect()  # Creamos la conexión
         cursor = conn.cursor()  # Establecemos la conexión
@@ -244,12 +242,12 @@ def destroy(id):
         return redirect('/')  # Redireccionamos a Inicio
 
 
-"""Renerizado de edit.HTML
-(Formulario para editar el plato con el ID pasado por parametro)"""
-
-
 @app.route('/edit/<int:id>')  # Recibe como parámetro el id del plato
 def edit(id):
+    """
+    Formulario para editar el plato
+    """
+
     if 'username' in session:  # Si es usuario registrado
         conn = mysql.connect()  # Creamos la conexión
         cursor = conn.cursor()  # Establecemos la conexión
@@ -263,15 +261,14 @@ def edit(id):
         return redirect('/')  # Redireccionamos a Inicio
 
 
-"""Realizar el ingreso en tabla de un nuevo plato,
-    o las modificaciones de uno existente"""
-
-
-# Recibimos los datos desde el formulario de creacion
 @app.route('/update', methods=['POST'])
-# Recibimos los datos desde el formulario de edición, del producto a editar
 @app.route('/update/<int:id_plato>', methods=['POST'])
 def update(id_plato=None):
+    """
+    Ingreso en tabla de un nuevo plato,
+    o las modificaciones de uno existente
+    """
+
     if 'username' in session:  # Si es usuario registrado
         # Obtenemos los datos correspondientes desde el form y los almacenamos
         nombre = request.form['txtNombre'].capitalize().replace(' ', '_')
@@ -320,22 +317,21 @@ def update(id_plato=None):
         return redirect('/')  # Redireccionamos a inicio
 
 
-"""Guardado de las fotos en la carpeta correspondiente"""
-
-
-# Recibimos como parametro el nombre de la foto
 @app.route('/fotos/<nombreFoto>')
 def uploads(nombreFoto):
+    """
+    Guardado de las fotos en la carpeta correspondiente
+    """
     # Guardamos la foto en la carpeta destinada, con su nombre correspondiente
     return send_from_directory(app.config['CARPETA'], nombreFoto)
 
 
-"""Creacion de nuevo usuario, para hacerlo, es necesario ser super usuario"""
-
-
-# Recibimos los datos del formulario
 @app.route('/crear_usuario/', methods=['POST'])
 def crear_usuario():
+    """
+    Creacion de nuevo usuario. Requiere ser super usuario
+    """
+
     if 'super' in session:  # Si es un super usuario
         nuevoUsuario = request.form['txtUsuario']  # Nombre de nuevo usuario
         nuevoPassword = request.form['txtPassword']  # Password
@@ -367,12 +363,12 @@ def crear_usuario():
         return redirect('/')  # Redireccionamos a la pagina de login
 
 
-"""Edicion datos usuario(propios)"""
-
-
-# recibimos los datos del formulario correspondiente
 @app.route('/modificar_usuario/', methods=['POST'])
 def modificar_usuario():
+    """
+    Edicion datos usuario (propios)
+    """
+
     if 'username' in session:  # Si es un usuario registrado
         nuevoNombre = request.form['txtUsuario']  # Nuevo nombre de usuario
         nuevoPassword = request.form['txtPassword']  # Nuevo passw de usuario
@@ -398,11 +394,12 @@ def modificar_usuario():
         return redirect('/administracion')  # Retornamos a administracion
 
 
-"""Cargar pedidos a una mesa"""
-
-
 @app.route('/cargarPedido/<int:mesa>', methods=['POST'])
 def cargarPedido(mesa):
+    """
+    Cargar pedidos a una mesa
+    """
+
     conn = mysql.connect()  # Creamos la conexión
     cursor = conn.cursor()  # Establecemos la conexión
     sql = "SELECT `pedidos` FROM `my_resto`.`mesas` WHERE `id_mesa` LIKE %s ;"
@@ -454,11 +451,12 @@ def cargarPedido(mesa):
     return redirect('/mesas/')  # Redirecionamos a mesas
 
 
-"""Establecimiento de la cantidad de mesas del negocio"""
-
-
 @app.route('/cantidad_mesas/', methods=['POST'])
 def cantidadMesas():
+    """
+    Cantidad de mesas del negocio
+    """
+
     # Declaramos que la variable cantidad_mesas es a nivel global
     global cantidad_mesas
     # Traemos la cantidad de mesas seleccionada por el usuario desde el form
@@ -479,13 +477,12 @@ def cantidadMesas():
     return redirect('/administracion')  # Redireccionamos a administracion
 
 
-"""Cerrar la cuenta de la mesa pasada por parametro,
-    entregando un resumen de lo consumido y el total a pagar,
-    y guardando los mismos en el registro de ventas"""
-
-
 @app.route('/cerrar_cuenta/<int:mesa>/')
 def cerrarCuenta(mesa):
+    """
+    Cerrar la cuenta de la mesa
+    """
+
     conn = mysql.connect()  # Creamos la conexión
     cursor = conn.cursor()  # Establecemos la conexión
     sql = """SELECT `pedidos`,`hora_abre` FROM `my_resto`.`mesas`
@@ -535,12 +532,12 @@ def cerrarCuenta(mesa):
         return redirect('/mesas')  # Redireccionamos a mesas
 
 
-"""Renderizacion de ventas.html
-    (donde se vera un listado de todas las ventas realizadas historicas)"""
-
-
 @app.route('/ventas/')
 def ventas():
+    """
+    Listado de todas las ventas históricas
+    """
+
     if 'super' in session:  # Si es un super usuario
         conn = mysql.connect()  # Creamos la conexión
         cursor = conn.cursor()  # Establecemos la conexión

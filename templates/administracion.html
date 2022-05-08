@@ -84,36 +84,30 @@
         <input type="submit" value="Enviar">
     </form>
 </div>
-<div>
-    <div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Foto</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                
-                {% for plato in platos %}
-                <tr>
-                    <td> <img width="100px" src="fotos/{{plato[4]}}" alt="{{plato[4]}}"> </td>
-                    <td> {{plato[1]}} </td>
-                    <td> {{plato[2]}} </td>
-                    <td> {{plato[3]}} </td>
-                    <td><a href="/edit/{{plato[0]}}"><button>Editar</button></a> <a
-                            onclick="return confirm('¿Desea borrar {{plato[1]}}?')"
-                            href="/destroy/{{plato[0]}}"><button>Eliminar</button></a>
-                    </td>
 
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    
+
+<div class="container mt-3">
+    <div class="row my-2 fw-bold">
+        <div class="col">Foto</div>
+        <div class="col">Nombre</div>
+        <div class="col">Descripción</div>
+        <div class="col">Precio</div>
+        <div class="col">Acciones</div>
     </div>
+    
+    {% for plato in platos %}
+    <div class="row">
+        <div class="col"><img width="100px" src="fotos/{{plato[4]}}" alt="{{plato[4]}}"></div>
+        <div class="col">{{plato[1]}}</div>
+        <div class="col">{{plato[2]}}</div>
+        <div class="col">{{plato[3]}}</div>
+        <div class="col">
+            <a href="/edit/{{plato[0]}}"><button>Editar</button></a> <a
+                onclick="return confirm('¿Desea borrar {{plato[1]}}?')"
+                href="/destroy/{{plato[0]}}"><button>Eliminar</button></a>
+        </div>
+    </div>
+    {% endfor %}
 
+    
 {% endblock %}

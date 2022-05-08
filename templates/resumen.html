@@ -7,11 +7,24 @@ Resumen
 {% endblock %}
 
 {% block header %}
-Cierre de mesa
+Resumen
 {% endblock %}
 
 
 {% block main %}
+<div class="container mt-3">
+    <div class="row my-2 fw-bold">
+        <div class="col">Producto</div>
+        <div class="col">Valor</div>
+    </div>
+    <div class="row">
+        {% for it in resumen[:-1] %}
+        <div class="col">{{it[0]}}:{{it[1]}}</div>
+        <div class="col">$ {{it[2]}}</div>
+        {% endfor %}
+    </div>
+</div>
+
 <table>
     <thead>
         <td>Producto</td>
@@ -26,7 +39,7 @@ Cierre de mesa
         {% endfor %}
     </tbody>
 </table>
-<div id="total"><h1>TOTAL= $ {{resumen[-1]}}</h1></div>
+<div id="total"><h2>TOTAL= $ {{resumen[-1]}}</h2></div>
  <br>
 
 

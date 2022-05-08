@@ -13,30 +13,30 @@ Historial
 
 {% block main %}
 
-<table>
-    <thead>
-        <th>Mesa</th>
-        <th>Apertura</th>
-        <th>Cierre</th>
-        <th>Consumido</th>
-        <th>Monto</th>
-    </thead>
-    <tbody>
-        {% for venta in ventas %}
-        <tr>
-            <td>{{venta[1]}}</td>
-            <td>{{venta[2]}}</td>
-            <td>{{venta[3]}}</td>
-            <td>{% for it in venta[4] %}
-                {{it}} <br>
-                {% endfor %}
-            </td>
-            <td>$ {{venta[5]}}</td>
-        </tr>
-        {% endfor %}
-        <tr><td></td><td></td><td></td><td>TOTAL</td><td>$ {{total}}</td></tr>
-    </tbody>
-</table>
-<!-- {{ventas}} -->
-{{a}}
+<div class="container mt-3">
+    <div class="row my-2 fw-bold">
+        <div class="col-1 d-flex justify-content-center">Mesa</div>
+        <div class="col d-flex justify-content-center">Apertura</div>
+        <div class="col d-flex justify-content-center">Cierre</div>
+        <div class="col d-flex justify-content-center">Consumo</div>
+        <div class="col-1">Monto</div>
+    </div>
+    {% for venta in ventas %}
+    <div class="row">
+        <div class="col-1 d-flex justify-content-center">{{venta[1]}}</div>
+        <div class="col d-flex justify-content-center">{{venta[2]}}</div>
+        <div class="col d-flex justify-content-center">{{venta[3]}}</div>
+        <div class="col d-flex justify-content-center">
+            {% for it in venta[4] %}
+            {{it}} <br>
+            {% endfor %}</div>
+        <div class="col-1 d-flex justify-content-end">$ {{venta[5]}}</div>
+    </div>
+    {% endfor %}
+    <div class="row d-flex justify-content-center mt-3 fw-bold">
+        <div class="col d-flex justify-content-end">TOTAL</div>
+        <div class="col-1 d-flex justify-content-end">$ {{total}}</div>
+    </div>
+    
+</div>
 {% endblock %}

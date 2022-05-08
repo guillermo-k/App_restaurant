@@ -4,48 +4,46 @@
 
 {% block titulo %}Platos{% endblock %}
 
-{% block header %}Platos <br> Mesa: {{mesa}}{% endblock %}
+{% block header %}Modificar pedido de mesa {{mesa}}{% endblock %}
 
 {% block main %}
 <div>
     <form action="/cargarPedido/{{mesa}}" method="post" id="cantidad">
-        <table>
-            <thead>
-                <tr>
-                    <th>Foto</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="container mt-3">
+            <div class="row my-2 fw-bold">
+                <div class="col">Foto</div>
+                <div class="col">Nombre</div>
+                <div class="col">Descripción</div>
+                <div class="col">Precio</div>
+                <div class="col">Acciones</div>
+            </div>
+            {% for plato in platos %}
+            <div class="row">
+                <div class="col"><img width="100px" src="../fotos/{{plato[4]}}" alt="{{plato[4]}}"></div>
+                <div class="col"><u>{{plato[1]}}</u></div>
+                <div class="col">{{plato[2]}}</div>
+                <div class="col">$ {{plato[3]}}</div>
+                <div class="col">
+                    <select form="cantidad" name={{plato[1]}} id={{plato[0]}}>
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
+                        <option value="0" selected>0</option>
+                        <option class="negativo" value="-1">-1</option>
+                        <option class="negativo" value="-2">-2</option>
+                        <option class="negativo" value="-3">-3</option>
+                        <option class="negativo" value="-4">-4</option>
+                        <option class="negativo" value="-5">-5</option>
+                    </select>
+                </div>
+            </div>
+            {% endfor %}
 
-                </td>
-                </tr>
-                {% for plato in platos %}
-                <tr>
-                    <td> <img width="100px" src="../fotos/{{plato[4]}}" alt="{{plato[4]}}"> </td>
-                    <td> <u>{{plato[1]}}</u> </td>
-                    <td> {{plato[2]}} </td>
-                    <td> $ {{plato[3]}} </td>
-                    <td><select form="cantidad" name={{plato[1]}} id={{plato[0]}}>
-                            <option value="5">5</option>
-                            <option value="4">4</option>
-                            <option value="3">3</option>
-                            <option value="2">2</option>
-                            <option value="1">1</option>
-                            <option value="0" selected>0</option>
-                            <option class="negativo" value="-1">-1</option>
-                            <option class="negativo" value="-2">-2</option>
-                            <option class="negativo" value="-3">-3</option>
-                            <option class="negativo" value="-4">-4</option>
-                            <option class="negativo" value="-5">-5</option>
-                        </select></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        </div>
+
+       
         <input type="submit" value="cargar">
     </form>
 </div>

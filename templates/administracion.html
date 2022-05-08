@@ -1,8 +1,10 @@
 {% extends "/base.html" %}
 
-{% block titulo %}Administracion{% endblock %}
+{% set active_page = 'administracion' %}
 
-{% block header %}ADMININISTRACION{% endblock %}
+{% block titulo %}Administración{% endblock %}
+
+{% block header %}Administración{% endblock %}
 
 {% block main %}
 <button onclick="desplegar('agregarUsuario')" class="btn-comentarios">Agregar usuario</button>

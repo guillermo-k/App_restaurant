@@ -226,11 +226,7 @@ def destroy(id):
         cursor.execute("""SELECT foto FROM `my_resto`.`platos`
         WHERE id_plato=%s""", id)
         fila = cursor.fetchall()  # Almacenamos en variable
-        try:
-            # Elimina la foto de la carpeta
-            os.remove(os.path.join(app.config['CARPETA'], fila[0][0]))
-        except FileNotFoundError:
-            print('Archivo no encontrado')
+        borrarFoto(fila[0][0])
         # Eliminamos el producto de la DB por su ID
         sql = "DELETE FROM `my_resto`.`platos` WHERE id_plato=%s"
         cursor.execute(sql, (id))
@@ -269,6 +265,8 @@ def update(id_plato=None):
     """
 
     if 'username' in session:  # Si es usuario registrado
+        conn = mysql.connect()  # Creamos la conexión
+        cursor = conn.cursor()  # Establecemos la conexión
         # Obtenemos los datos correspondientes desde el form y los almacenamos
         nombre = request.form['txtNombre'].capitalize().replace(' ', '_')
         descripcion_plato = request.form['txtDescripcionPlato'].capitalize()
@@ -285,6 +283,11 @@ def update(id_plato=None):
             nuevoNombreFoto = tiempo+nombre+'.'+extension[1]
             # Guardamos la foto en la carpeta correspondiente
             foto.save('App_restaurant/fotos/'+nuevoNombreFoto)
+            # Buscamos el nombre de la foto vieja
+            sql = 'SELECT `foto` FROM `my_resto`.`platos` WHERE id_plato=%s'
+            cursor.execute(sql,id_plato)
+            fotoVieja = cursor.fetchall()[0][0]
+            borrarFoto(fotoVieja)
         else:  # Si no se adjunto un archivo
             nuevoNombreFoto = request.form['viejoNombreFoto']
             if nuevoNombreFoto == '':
@@ -306,8 +309,6 @@ def update(id_plato=None):
             sql = """INSERT `my_resto`.`platos`
             (`nombre`,`descripcion_plato`, `precio`, `foto`)
             VALUES(%s,%s,%s,%s)"""
-        conn = mysql.connect()  # Creamos la conexión
-        cursor = conn.cursor()  # Establecemos la conexión
         # Ejecutamos la sentencia, ya sea para creacion o edicion del plato
         cursor.execute(sql, datos)
         conn.commit()  # Cerramos la conexión
@@ -565,6 +566,15 @@ def seleccionmesas():
     global cantidad_mesas
     cantidad_mesas = int(request.form['cantidad_mesas'])
     return redirect('/mesas')
+
+
+def borrarFoto(nombre):
+    """Borra la foto de 'App_restaurant/fotos' pasada por parametro"""
+    try:
+        # Elimina la foto de la carpeta
+        os.remove('App_restaurant/fotos/' + nombre)
+    except FileNotFoundError:
+        print('Archivo no encontrado')
 
 
 if __name__ == '__main__':

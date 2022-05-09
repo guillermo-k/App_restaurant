@@ -285,7 +285,7 @@ def update(id_plato=None):
             foto.save('App_restaurant/fotos/'+nuevoNombreFoto)
             # Buscamos el nombre de la foto vieja
             sql = 'SELECT `foto` FROM `my_resto`.`platos` WHERE id_plato=%s'
-            cursor.execute(sql,id_plato)
+            cursor.execute(sql, id_plato)
             fotoVieja = cursor.fetchall()[0][0]
             borrarFoto(fotoVieja)
         else:  # Si no se adjunto un archivo

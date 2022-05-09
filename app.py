@@ -285,7 +285,7 @@ def update(id_plato=None):
             # Creamos el nombre de la foto
             nuevoNombreFoto = tiempo+nombre+'.'+extension[1]
             # Guardamos la foto en la carpeta correspondiente
-            foto.save('fotos/'+nuevoNombreFoto)
+            foto.save('App_restaurant/fotos/'+nuevoNombreFoto)
         else:  # Si no se adjunto un archivo
             nuevoNombreFoto = request.form['viejoNombreFoto']
             if nuevoNombreFoto == '':

@@ -5,10 +5,12 @@ function desplegar(id) {
     if (x.style.display === "none") {
         document.getElementById("agregarUsuario").style.display = "none";
         document.getElementById("editarUsuario").style.display = "none";
-        document.getElementById("agregarPlato").style.display = "none";
+        document.getElementById("editarPlatos").style.display = "none";
         document.getElementById("cantidadMesas").style.display = "none";
+        
         x.style.display = "block";
     } else {
+        document.getElementById("agregarPlato").style.display = "none";
         x.style.display = "none";
     }
 }

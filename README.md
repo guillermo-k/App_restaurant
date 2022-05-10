@@ -6,7 +6,7 @@
   ```bash
   pip3 install -r requirements.txt
   ```
-- Instalar [XAMPP](https://www.apachefriends.org/download.html)
+- Instalar [XAMPP](https://www.apachefriends.org/download.html) (No es necesario en Ubuntu)
   ```bash
   cd /home/[username]/Downloads
   chmod a+x xampp-linux-*-installer.run

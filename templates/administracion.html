@@ -9,105 +9,129 @@
 {% block main %}
 <button onclick="desplegar('agregarUsuario')" class="btn-comentarios">Agregar usuario</button>
 <button onclick="desplegar('editarUsuario')" class="btn-comentarios">Editar mis datos</button>
-<button onclick="desplegar('agregarPlato')" class="btn-comentarios">Agregar plato</button>
+<button onclick="desplegar('editarPlatos')" class="btn-comentarios">Platos</button>
 <button onclick="desplegar('cantidadMesas')" class="btn-comentarios">Cantidad de mesas</button>
-<div id="agregarUsuario" style="display: none">
-    <form method="post" action="/crear_usuario" enctype="multipart/form-data">
-        <h2>Crear usuario</h2>
-        <BR>
-        <div>
-            <label for="txtUsuario">Nombre de usuario:</label>
-            <input id="txtUsuario" type="text" name="txtUsuario">
-        </div>
-        <br>
-        <div>
-            <label for="txtPassword">Password:</label>
-            <input type="password" name="txtPassword" id="txtPassword">
-        </div>
-        <br>
-        <div>Super usuario: 
-            <label for="si">Si</label>
-            <input type="radio" class="checkbox" name="superUsuario" id="si" value="1">
-            <label for="no">No</label>
-            <input type="radio" class="checkbox" name="superUsuario" id="no" value="0" checked>
-        </div>
-        <br>
-        <div class="form-group">
-            <input name="submit" type="submit" value="Agregar usuario">
-        </div>
-    </form>
+
+<div id="agregarUsuario" style="display: none;">
+    <div class="container mt-3"></div>
+        <form method="post" action="/crear_usuario" enctype="multipart/form-data">
+            <h2>Crear usuario</h2>
+            <BR>
+            <div>
+                <label for="txtUsuario">Nombre de usuario:</label>
+                <input id="txtUsuario" type="text" name="txtUsuario">
+            </div>
+            <br>
+            <div>
+                <label for="txtPassword">Password:</label>
+                <input type="password" name="txtPassword" id="txtPassword">
+            </div>
+            <br>
+            <div>Super usuario: 
+                <label for="si">Si</label>
+                <input type="radio" class="checkbox" name="superUsuario" id="si" value="1">
+                <label for="no">No</label>
+                <input type="radio" class="checkbox" name="superUsuario" id="no" value="0" checked>
+            </div>
+            <br>
+            <div class="form-group">
+                <input name="submit" type="submit" value="Agregar usuario">
+            </div>
+        </form>
+    </div>
 </div>
-<div id="editarUsuario" style="display: none">
-    <form method="post" action="/modificar_usuario" enctype="multipart/form-data">
-        <h2>Editar usuario</h2>
-        <br>
-        <div>
-            <label for="txtUsuario">Nuevo nombre de usuario:</label>
-            <input id="txtUsuario" type="text" name="txtUsuario">
-        </div><br>
-        <div>
-            <label for="txtPassword">Nuevo password:</label>
-            <input type="password" name="txtPassword" id="txtPassword">
-        </div><br>
-        <div>
-            <input type="submit" value="Enviar">
-        </div>
-    </form>
+
+<div id="editarUsuario" style="display: none;">
+    <div class="container mt-3">
+        <form method="post" action="/modificar_usuario" enctype="multipart/form-data">
+            <h2>Editar usuario</h2>
+            <br>
+            <div>
+                <label for="txtUsuario">Nuevo nombre de usuario:</label>
+                <input id="txtUsuario" type="text" name="txtUsuario">
+            </div><br>
+            <div>
+                <label for="txtPassword">Nuevo password:</label>
+                <input type="password" name="txtPassword" id="txtPassword">
+            </div><br>
+            <div>
+                <input type="submit" value="Enviar">
+            </div>
+        </form>
+    </div>
 </div>
-<div id="agregarPlato" style="display: none;">
-    <form name="formulario" action="/update" method="POST" enctype="multipart/form-data">
-        <h2>Agregar plato</h2>
-        <div>
-            <label for="txtNombre">Nombre: </label>
-            <input type="text" name="txtNombre" id="txtNombre">
-        </div><br>
-        <div class="txtFoto">
-            <label for="txtFoto">Foto: </label>
-            <input type="file" name="txtFoto" id="txtFoto">
-        </div><br>
-        <div>
-            <label for="txtDescripcion_p">Descripción: </label>
-            <textarea type="text" name="txtDescripcionPlato" id="txtDescripcionPlato"></textarea>
-        </div><br>
-        <div>
-            <label for="txtPrecio">Precio: </label>
-            <input type="text" name="txtPrecio" id="txtPrecio">
-        </div><br>
-        <input type="hidden" name="viejoNombreFoto" id="viejoNombreFoto" value="">
-        <div><input type="submit" value="Cargar nuevo plato"></div>
-    </form>
-</div>
+
 <div id="cantidadMesas" style="display: none;">
-    <form action="/cantidad_mesas/" method="post">
-        <h2>Seleccione la cantidad de mesas</h2>
-        <input type="number" name="cantidad_mesas" id="cantidad_mesas" value="{{cantidad}}"><br>
-        <input type="submit" value="Enviar">
-    </form>
+    <div class="container mt-3">
+        <form action="/cantidad_mesas/" method="post">
+            <h2>Seleccione la cantidad de mesas</h2>
+            <input type="number" name="cantidad_mesas" id="cantidad_mesas" value="{{cantidad}}"><br>
+            <input type="submit" value="Enviar">
+        </form>
+    </div>
 </div>
 
-
-<div class="container mt-3">
-    <div class="row my-2 fw-bold">
-        <div class="col">Foto</div>
-        <div class="col">Nombre</div>
-        <div class="col">Descripción</div>
-        <div class="col">Precio</div>
-        <div class="col">Acciones</div>
-    </div>
-    
-    {% for plato in platos %}
-    <div class="row">
-        <div class="col"><img width="100px" src="../fotos/{{plato[4]}}" alt="{{plato[4]}}"></div>
-        <div class="col">{{plato[1]}}</div>
-        <div class="col">{{plato[2]}}</div>
-        <div class="col">{{plato[3]}}</div>
-        <div class="col">
-            <a href="/edit/{{plato[0]}}"><button>Editar</button></a> <a
-                onclick="return confirm('¿Desea borrar {{plato[1]}}?')"
-                href="/destroy/{{plato[0]}}"><button>Eliminar</button></a>
+<div id="editarPlatos" style="display: none;">
+    <div class="container mt-3">
+        <div class="row my-2 fw-bold">
+            <div class="col">Foto</div>
+            <div class="col">Nombre</div>
+            <div class="col">Descripción</div>
+            <div class="col">Precio</div>
+            <div class="col"></div>
         </div>
+        
+        {% for plato in platos %}
+        <div class="row">
+            <div class="col"><img width="100px" src="../fotos/{{plato[4]}}" alt="{{plato[4]}}"></div>
+            <div class="col">{{plato[1]}}</div>
+            <div class="col">{{plato[2]}}</div>
+            <div class="col">{{plato[3]}}</div>
+            <div class="col">
+                <a href="/edit/{{plato[0]}}"><i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" title="Editar"></i></a> <a
+                    onclick="return confirm('¿Desea borrar {{plato[1]}}?')"
+                    href="/destroy/{{plato[0]}}"><i class="fa-solid fa-trash-can" data-bs-toggle="tooltip" title="Borrar"></i></a>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    <button onclick="ver('agregarPlato')" class="btn-comentarios">Agregar plato</button>
+
+    <div id="agregarPlato" style="display: none;">
+        <form name="formulario" action="/update" method="POST" enctype="multipart/form-data">
+            <div class="container my-3">
+                <h2>Agregar plato</h2>
+                <div class="row">
+                    <div class="col-1"><label for="txtNombre">Nombre: </label></div>
+                    <div class="col"><input type="text" name="txtNombre" id="txtNombre"></div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-1"><div class="txtFoto"><label for="txtFoto">Foto: </label></div></div>
+                    <div class="col"><input type="file" name="txtFoto" id="txtFoto"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-1"><label for="txtDescripcion_p">Descripción: </label></div>
+                    <div class="col"><textarea type="text" name="txtDescripcionPlato" id="txtDescripcionPlato"></textarea></div>
+                </div>
+
+                <div class="row">                
+                    <div class="col-1"><label for="txtPrecio">Precio: </label></div>
+                    <div class="col"><input type="text" name="txtPrecio" id="txtPrecio"></div>
+                </div>
+
+                <div class="row">   
+                    <div class="col-1"><input type="hidden" name="viejoNombreFoto" id="viejoNombreFoto" value=""></div>
+                    <div class="col"><input type="submit" value="Cargar nuevo plato"></div>
+                </div>
+                
+                
+            </div>
+        </form>
     </div>
-    {% endfor %}
+</div>
 
     
 {% endblock %}

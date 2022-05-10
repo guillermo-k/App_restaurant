@@ -12,7 +12,7 @@
         <div class="col-1 d-flex justify-content-center">Mesa</div>
         <div class="col d-flex justify-content-center">Pedidos</div>
         <div class="col d-flex justify-content-center">Total</div>
-        <div class="col-1 d-flex justify-content-center">Acciones</div>
+        <div class="col-1 d-flex justify-content-center"></div>
     </div>
     {% for mesa in mesas %}
     <div class="row">
@@ -39,7 +39,7 @@
         <div class="col d-flex justify-content-center">$ {{mesa[2]}}</div>
         <div class="col-1 d-flex justify-content-center">
             <a href="../platos/{{mesa[0]}}">
-                <button>Modificar</button>
+                <i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" title="Editar pedido"></i>
             </a><br>
             {% if mesa[2] >0 %}
             

@@ -118,9 +118,7 @@ def ingresar():
 
 @app.route('/mesas/')
 def mesas():
-    """
-    Listado de mesas, carga de pedidos por mesa, y cierre de mesa
-    """
+    """Listado de mesas, carga de pedidos por mesa, y cierre de mesa"""
 
     if 'username' in session:  # Si es usuario registrado
         conn = mysql.connect()  # Creamos la conexión
@@ -175,8 +173,7 @@ def logout():
 
 @app.route('/platos/<int:id_mesa>/')
 def platos(id_mesa):
-    """
-    Listado del menu disponible
+    """Listado del menu disponible
     Agregar o quitar platos al pedido
     """
 
@@ -194,9 +191,9 @@ def platos(id_mesa):
 
 @app.route('/administracion/')
 def administracion():
-    """
-    Agrega y edita usuarios
-    Agrega o elimina plato del menú
+    """Administración
+    Alta y edición de usuarios
+    Platos
     Configura la cantidad de mesas
     """
 
@@ -216,9 +213,7 @@ def administracion():
 
 @app.route('/destroy/<int:id>')  # Recibe como parámetro el id del producto
 def destroy(id):
-    """
-    Borrado de plato por ID
-    """
+    """Borrado de plato por ID"""
     if 'username' in session:  # Si es usuario registrado
         conn = mysql.connect()  # Creamos la conexión
         cursor = conn.cursor()  # Establecemos la conexión
@@ -239,9 +234,7 @@ def destroy(id):
 
 @app.route('/edit/<int:id>')  # Recibe como parámetro el id del plato
 def edit(id):
-    """
-    Formulario para editar el plato
-    """
+    """Formulario para editar el plato"""
 
     if 'username' in session:  # Si es usuario registrado
         conn = mysql.connect()  # Creamos la conexión
@@ -259,9 +252,8 @@ def edit(id):
 @app.route('/update', methods=['POST'])
 @app.route('/update/<int:id_plato>', methods=['POST'])
 def update(id_plato=None):
-    """
-    Ingreso en tabla de un nuevo plato,
-    o las modificaciones de uno existente
+    """Platos
+    Alta y modificaciones
     """
 
     if 'username' in session:  # Si es usuario registrado
@@ -319,18 +311,14 @@ def update(id_plato=None):
 
 @app.route('/fotos/<nombreFoto>')
 def uploads(nombreFoto):
-    """
-    Guardado de las fotos en la carpeta correspondiente
-    """
+    """Guardado de las fotos en la carpeta correspondiente"""
     # Guardamos la foto en la carpeta destinada, con su nombre correspondiente
     return send_from_directory(app.config['CARPETA'], nombreFoto)
 
 
 @app.route('/crear_usuario/', methods=['POST'])
 def crear_usuario():
-    """
-    Creacion de nuevo usuario. Requiere ser super usuario
-    """
+    """Creacion de nuevo usuario. Requiere ser super usuario"""
 
     if 'super' in session:  # Si es un super usuario
         nuevoUsuario = request.form['txtUsuario']  # Nombre de nuevo usuario
@@ -365,9 +353,7 @@ def crear_usuario():
 
 @app.route('/modificar_usuario/', methods=['POST'])
 def modificar_usuario():
-    """
-    Edicion datos usuario (propios)
-    """
+    """Edicion datos usuario (propios)"""
 
     if 'username' in session:  # Si es un usuario registrado
         nuevoNombre = request.form['txtUsuario']  # Nuevo nombre de usuario
@@ -396,9 +382,7 @@ def modificar_usuario():
 
 @app.route('/cargarPedido/<int:mesa>', methods=['POST'])
 def cargarPedido(mesa):
-    """
-    Cargar pedidos a una mesa
-    """
+    """Cargar pedidos a una mesa"""
 
     conn = mysql.connect()  # Creamos la conexión
     cursor = conn.cursor()  # Establecemos la conexión
@@ -453,9 +437,7 @@ def cargarPedido(mesa):
 
 @app.route('/cantidad_mesas/', methods=['POST'])
 def cantidadMesas():
-    """
-    Cantidad de mesas del negocio
-    """
+    """Cantidad de mesas del negocio"""
 
     # Declaramos que la variable cantidad_mesas es a nivel global
     global cantidad_mesas
@@ -479,9 +461,7 @@ def cantidadMesas():
 
 @app.route('/cerrar_cuenta/<int:mesa>/')
 def cerrarCuenta(mesa):
-    """
-    Cerrar la cuenta de la mesa
-    """
+    """Cerrar la cuenta de la mesa"""
 
     conn = mysql.connect()  # Creamos la conexión
     cursor = conn.cursor()  # Establecemos la conexión
@@ -534,9 +514,7 @@ def cerrarCuenta(mesa):
 
 @app.route('/ventas/')
 def ventas():
-    """
-    Listado de todas las ventas históricas
-    """
+    """Listado de todas las ventas históricas"""
 
     if 'super' in session:  # Si es un super usuario
         conn = mysql.connect()  # Creamos la conexión

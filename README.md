@@ -13,7 +13,7 @@
   sudo ./xampp-linux-*-installer.run
   ```
   Luego de correr los comandos anteriores, seguir con la instalación gráfica.
-- Instalar MySQL
+- Instalar MySQL (no hace falta si ya está instalado XAMPP)
   ```bash
   sudo apt update
   sudo apt install mysql-server

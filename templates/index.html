@@ -1,37 +1,76 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% set active_page = 'inicio' %} {% block titulo %}
+Login {% endblock %} {% block header %} {% if "username" not in session %}
+Ingresá tus datos para empezar {% else %} Ya te has autenticado {% endif %} {%
+endblock %} {% block main %} {% if "username" not in session %}
+</form> -->
+<div class="box-content-view">
+  <div class="box-half img-cover">
+    <img
+      src="https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
+      alt="restaurante_mesera"
+    />
+  </div>
 
-{% set active_page = 'inicio' %}
-
-{% block titulo %}
-    Login
-{% endblock %}
-
-
-
-{% block header %}
-    {% if "username" not in session %}
-        Ingresá tus datos para empezar
-    {% else %}
-        Ya te has autenticado
-    {% endif %} 
-{% endblock %}
-
-{% block main %}
-    {% if "username" not in session %}
+  <div class="box-half frm-content">
+    <div class="box-top"><h2>Bienvenidos a Resto Billing</h2></div>
+    <div class="box-center">
+      <div class="box-login">
         <form action="/ingresar" method="post" enctype="multipart/form-data">
-            <label for="txtUsuario">Usuario: </label>
-            <input type="text" name="txtUsuario" id="txtUsuario">
-            <br><br>
-            <label for="txtPassword">Contraseña: </label>
-            <input type="password" name="txtPassword" id="txtPassword"><br><br>
-            <label for="cantidad_mesas">Cantidas de mesas:</label>
-            <input type="number" name="cantidad_mesas" id="cantidad_mesas" value="5"><br><br>
-            <input type="submit" value="Ingresar">
+          <!--    <div><span>Usuario o contraseña incorrectos!</span></div> -->
+          <div class="box-form-fields">
+            <ul>
+              <li>
+                <div class="side right">
+                  <div class="form-group">
+                    <label for="txtUsuario">Usuario: </label>
+                    <input
+                      class="text-input"
+                      type="text"
+                      name="txtUsuario"
+                      id="txtUsuario"
+                    />
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="side right">
+                  <div class="form-group">
+                    <label for="txtPassword">Contraseña: </label>
+                    <input
+                      class="text-input"
+                      type="password"
+                      name="txtPassword"
+                      id="txtPassword"
+                    />
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="side right">
+                  <div class="form-group">
+                    <label for="cantidad_mesas">Cantidas de mesas:</label>
+                    <input
+                      class="text-input"
+                      type="number"
+                      name="cantidad_mesas"
+                      id="cantidad_mesas"
+                      value="5"
+                    />
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <button type="submit" class="button full-width">
+            <span>Ingresar</span>
+          </button>
         </form>
-    {% endif %}        
-{% endblock %}
-       
+      </div>
+    </div>
+    <div class="box-bottom">
+      © 2022 Resto Billing. Todos los derechos reservados.
+    </div>
+  </div>
+</div>
 
-
-
-
+{% endif %} {% endblock %}

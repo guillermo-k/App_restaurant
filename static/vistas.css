@@ -1,181 +1,391 @@
-*{
-    margin: 0px;
-    padding: 0px;
-    font-family: sans-serif, arial;
-    text-align: center;
+*,
+::after,
+::before {
+  box-sizing: border-box;
 }
 
-.negativo{
-    background-color: red;
+* {
+  margin: 0;
+  padding: 0;
 }
 
-.bienvenida{
-    text-align: center;
-    padding-inline: 20%;
-    padding-block: 5%;
+:root {
+  --red: #d81c23;
+  --white-blue: #4fa8c2;
+  --white: #fff;
+  --black: #181818;
+  --orange: #d97441;
+  --yellow: #d29849;
 }
 
-header{
-    /* color:#aeaae8; */
-    color:#4e3a23;
-    font-size: 2.5rem;
-    font-family: 'inconsolata';
+body {
+  color: var(--black);
+  width: 100%;
+  height: 100vh;
+  line-height: 1.6;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font-family: Oswald, Helvetica Neue, Arial, sans-serif;
+  font-size: 16px;
 }
 
-header h1{
-    text-decoration-line: underline;
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
-.header2{
-    text-align: left;
-    margin-left: -40%;
-    margin-top: 1.6rem;
-    color: gold;
-}
-body{
-    background-image: url("/static/img/background.jpg");
-    background-blend-mode: color-burn;
-    background-color: #4766ec;
-    min-height: 100%;
-    position: relative;
+.checkbox {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
-.checkbox{
-width: 1.5rem;
-height: 1.5rem;
+/* button {
+  margin: 0.85rem;
+  padding: 0.21rem 0.5rem;
+  border-radius: 1.6rem;
+  font-size: 1.6rem;
+  text-align: center;
+  transition-duration: 1.5s;
+  background: #2bf927;
+  color: #000;
+}
+ */
+ol,
+ul {
+  list-style: none;
 }
 
-button{
-    margin: .85rem;
-    padding: 0.21rem 0.5rem;
-    border-radius: 1.6rem;
-    font-size: 1.6rem;
-    text-align: center;
-    transition-duration: 1.5s;
-    background: #2BF927;
-    color: #000;
+a {
+  text-decoration: none;
 }
 
-button:hover{
-    background-color: #000;
-    color: #2BF927;
+/* button:hover {
+  background-color: #000;
+  color: #2bf927;
+} */
+
+.btn-comentarios,
+select,
+[type="file"] button {
+  margin: 0.5rem;
+  padding: 0.1rem 0.3rem;
+  border-radius: 1.6rem;
+  font-size: 1.2rem;
+  text-align: center;
+  transition-duration: 1s;
+  background: #ffa500;
+  color: #000;
 }
 
-.btn-comentarios, select,[type=file] button {
-    margin: .5rem;
-    padding: 0.1rem 0.3rem;
-    border-radius: 1.6rem;
-    font-size: 1.2rem;
-    text-align: center;
-    transition-duration: 1s;
-    background: #ffa500;
-    color: #000;
+.btn-comentarios:hover {
+  background: #000;
+  color: #ffa500;
 }
 
-.btn-comentarios:hover{
-    background: #000;
-    color:#ffa500 ;
+p {
+  font-family: "monserrat";
+  color: rgb(46, 2, 42);
+  font-size: 1rem;
+  padding: 3, 4rem;
 }
 
-p{
-    font-family: 'monserrat';
-    color: rgb(46, 2, 42);
-    font-size: 1rem;
-    padding: 3,4rem;
+footer {
+  background-color: rgb(10, 3, 6);
+  text-align: right;
+  padding-right: 5%;
+}
+footer h1 {
+  display: inline-block;
+  color: white;
+}
+footer a {
+  color: chartreuse;
 }
 
-
-footer{
-    background-color: rgb(10, 3, 6);
-    text-align: right;
-    padding-right: 5%;
-}
-footer h1{
-    display: inline-block;
-    color: white;
-}
-footer a{
-    color: chartreuse;
+.contribucion {
+  text-align: right;
+  font-size: x-small;
 }
 
-.contribucion{
-    text-align: right;
-    font-size:x-small;
+table {
+  margin: auto;
+  margin-top: 2.5rem;
+  padding: 1.6rem;
+  border-style: double;
+  border-color: black;
+  width: 90%;
+  border-collapse: collapse;
+  border: 5px solid;
 }
 
-table{
-    margin: auto;
-    margin-top: 2.5rem;
-    padding: 1.6rem;
-    border-style: double;
-    border-color: black;
-    width: 90%;
-    border-collapse: collapse;
-    border: 5px solid;
+th {
+  border: black double;
+  border-width: 1px;
+  font-size: 1.6rem;
 }
 
-th{
-    border: black double;
-    border-width: 1px ;
-    font-size: 1.6rem;
+td {
+  border: black solid;
+  border-width: 1px;
+  padding: 0.7rem;
+  font-size: 1.4rem;
 }
 
-td{
-    border: black solid;
-    border-width: 1px ;
-    padding: .7rem;
-    font-size: 1.4rem;
+/* ------------------------------------NAVBAR STYLES-------------------------------------- */
+
+.nav-bg {
+  padding: 10px;
+  background: var(--red);
 }
 
-input, textarea{
-    border-radius: 7px;
-    font-size: 1.3rem;
-    max-width: 34rem;
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-
-form div{
-    border: black dotted 2px;
-    max-width: auto;
-    display: inline-block;
-    margin-block: 3px;
-    border-radius: 10px;
-    padding: 0rem;
-    font-size: 1.5rem;
-    vertical-align: middle;
+.nav-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
 }
 
-
-[type="submit"]{
-    background-color: rgb(131, 187, 240);
+.nav-list {
+  display: flex;
+  flex-direction: row;
 }
 
+.nav-list li {
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: 20px;
+}
 
-@media only screen and (max-width: 700px){
+/* ------------------------------------FORM LOGIN STYLES-------------------------------------- */
+.box-content-view {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
 
-    table, tr, td, th{
-        font-size: .6rem;
-    }
+.img-cover img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
 
-    
-    h1{
-        font-size: 2.3rem;
-    }
+.box-content-view .box-half {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  float: left;
+  width: 50%;
+  height: 100vh;
+  padding: 35px;
+  z-index: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 
-p{
+.box-content-view .box-top {
+  text-align: center;
+}
+
+.box-content-view .box-center {
+  text-align: center;
+}
+
+.box-login {
+  width: 430px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding-bottom: 15px;
+}
+
+.box-content-view .box-bottom {
+  text-align: center;
+  line-height: 20px;
+}
+
+.box-login .box-form-fields .side.right {
+  float: none;
+  width: 100%;
+}
+
+.box-login .box-form-fields .side {
+  /*  margin-bottom: 20px; */
+  line-height: 60px;
+  text-align: left;
+}
+
+.form-group {
+  position: relative;
+  display: block;
+}
+
+.box-form-fields .text-input {
+  width: 100%;
+}
+
+.text-input {
+  display: block;
+  height: 40px;
+  padding: 0 15px;
+  transition: all 0.3s ease-in-out;
+}
+
+.box-form-fields .side {
+  margin: 7px 0;
+}
+
+.box-login button {
+  margin-top: 30px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.button {
+  position: relative;
+  display: inline-block;
+  height: 60px;
+  padding: 0 35px;
+  background-color: var(--red);
+  color: var(--white);
+  line-height: 60px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.button span {
+  text-transform: uppercase;
+}
+
+.box-content-view .box-bottom {
+  text-align: center;
+  line-height: 23px;
+}
+/* ----------------------------------------------------------------------------------------------- */
+
+/* ----------------------------------------TABLE STYLES------------------------------------------- */
+.wrapper {
+  width: 100%;
+  margin: 20px auto 100px auto;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.row ul {
+  margin: 0;
+  padding: 0;
+}
+
+.row ul li {
+  margin: 0;
+  font-size: 16px;
+  font-weight: normal;
+  list-style: none;
+  display: inline-block;
+  width: 20%;
+  box-sizing: border-box;
+}
+
+.title ul li {
+  padding: 15px 13px;
+}
+
+.row ul li {
+  padding: 5px 10px;
+}
+
+.row {
+  padding: 20px 0;
+  height: 65px;
+  font-size: 0;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease-out;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.row:hover {
+  background-color: rgba(26, 26, 26, 0.9);
+}
+
+.title {
+  height: 55px;
+  font-size: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left: 3px solid rgba(255, 255, 255, 0.1);
+}
+
+.row-fadeOut-wrapper {
+  font-size: 0;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.2s ease-out;
+  animation: fadeOut 0.4s ease-out 8s 1 alternate;
+  animation-fill-mode: forwards;
+  opacity: 1;
+  height: 65px;
+}
+
+/* 
+ul.more-content li {
+  position: relative;
+  top: 22px;
+  font-size: 13px;
+  margin: 0;
+  padding: 10px 13px;
+  display: block;
+  height: 50px;
+  width: 100%;
+  color: rgba(128, 128, 128, 0.9);
+}
+ */
+/* ----------------------------------------------------------------------------------------------- */
+
+@media only screen and (max-width: 700px) {
+  table,
+  tr,
+  td,
+  th {
+    font-size: 0.6rem;
+  }
+
+  h1 {
+    font-size: 2.3rem;
+  }
+
+  p {
     font-size: 1.1rem;
-}
-.estrella{
-    width: .8rem;
-}
-.header2{
-    margin-left:20%;
-
-}
-.header2 div{
+  }
+  .estrella {
+    width: 0.8rem;
+  }
+  .header2 {
+    margin-left: 20%;
+  }
+  .header2 div {
     font-size: 1.2rem;
     display: inline;
     vertical-align: top;
-
-}
+  }
 }

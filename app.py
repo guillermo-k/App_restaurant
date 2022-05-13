@@ -1,5 +1,5 @@
 import json
-from flask import Flask, make_response, redirect, render_template, request, session, flash
+from flask import Flask, redirect, render_template, request, session, flash
 from flaskext.mysql import MySQL
 from datetime import datetime
 import os  # Nos permite acceder a los archivos

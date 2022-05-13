@@ -3,7 +3,7 @@ from flask import Flask, make_response, redirect, render_template, request, sess
 from flaskext.mysql import MySQL
 from datetime import datetime
 import os  # Nos permite acceder a los archivos
-from flask import send_from_directory  # Acceso a las carpetas
+from flask import send_from_directory, make_response  # Acceso a las carpetas
 import cryptocode
 
 cantidad_mesas = 3
@@ -80,7 +80,7 @@ conn.commit()  # Cerramos conexión con DB
 
 @app.route('/')
 def login():
-    cookie=request.cookies.get('mesas')
+    cookie = request.cookies.get('mesas')
     global cantidad_mesas
     cantidad_mesas = int(cookie)
     return render_template('/index.html')
@@ -108,8 +108,6 @@ def ingresar():
             if usuario[0][2]:  # Si el usuario es super usuario
                 # Creamos la cookie para de super usuario
                 session['super'] = usuario[0][2]
-            # global cantidad_mesas
-            # cantidad_mesas = int(request.form['cantidad_mesas'])
             return redirect('/mesas')
         else:  # Si no es un usuario registrado
             flash('Usuario o contraseña erroneos')  # Escribimos un mensaje
@@ -459,8 +457,8 @@ def cantidadMesas():
         cursor.execute("INSERT `my_resto`.`mesas`(`pedidos`) VALUES(NULL)")
         mesas += 1  # Incrementamos la cantidad de mesas existentes
     conn.commit()  # Cerramos conexion
-    respuesta=make_response(redirect('/administracion'))
-    respuesta.set_cookie('mesas',str(cantidad_mesas))
+    respuesta = make_response(redirect('/administracion'))
+    respuesta.set_cookie('mesas', str(cantidad_mesas))
     return respuesta
 
 

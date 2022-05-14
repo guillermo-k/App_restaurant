@@ -10,14 +10,19 @@
             <h4>MESA N°{{mesa[0]}}</h4>
           </div>
           <figure class="figura">
-            <div class="img-bg"></div>
+            <div class="img-bg">
+              <img
+                src="https://images.pexels.com/photos/326333/pexels-photo-326333.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=450&w=340"
+                alt=""
+              />
+            </div>
           </figure>
-          <button
-            onclick='ver("{{mesa[0]}}")'
-            class="button min-width ver {{mesa[0]}}"
-          >
-            VER
-          </button>
+          {% if mesa[1]|length == 0 %}
+          <button id="show-back" class="button min-width ver">VER</button>
+          {% endif %} {% if mesa[1]|length > 0 %}
+          <span>Mesa Disponible</span>
+          <button id="show-back" class="button min-width ver">VER</button>
+          {% endif %}
         </div>
         <div id="{{mesa[0]}}" class="card-back">
           <figure class="figura">

@@ -341,13 +341,14 @@ ul.more-content li {
   position: relative;
 }
 
-.flip-card-container:hover .flip-card,
+/* .flip-card-container:hover .flip-card,
 .flip-card-container:focus-within .flip-card {
   transform: rotateY(180deg);
-}
+} */
 
 .card-front,
 .card-back {
+  transform: rotateY(180deg);
   width: 100%;
   height: 100%;
   border-radius: 5px;

@@ -10,19 +10,20 @@
 }
 
 :root {
-  --red: #d81c23;
+  --red: #cc0033;
   --white-blue: #4fa8c2;
-  --white: #fff;
-  --black: #181818;
+  --white: #dfdde1;
+  --black: #1b1c1e;
   --orange: #d97441;
   --yellow: #d29849;
 }
 
 body {
-  color: var(--black);
+  background: var(--black);
+  color: var(--white);
   width: 100%;
   height: 100vh;
-  line-height: 1.6;
+  line-height: 1.5;
   margin: 0;
   border: 0;
   padding: 0;
@@ -38,22 +39,6 @@ body {
   padding-right: 15px;
 }
 
-.checkbox {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-/* button {
-  margin: 0.85rem;
-  padding: 0.21rem 0.5rem;
-  border-radius: 1.6rem;
-  font-size: 1.6rem;
-  text-align: center;
-  transition-duration: 1.5s;
-  background: #2bf927;
-  color: #000;
-}
- */
 ol,
 ul {
   list-style: none;
@@ -61,84 +46,38 @@ ul {
 
 a {
   text-decoration: none;
+  color: var(--black);
 }
 
-/* button:hover {
-  background-color: #000;
-  color: #2bf927;
-} */
-
-.btn-comentarios,
-select,
-[type="file"] button {
-  margin: 0.5rem;
-  padding: 0.1rem 0.3rem;
-  border-radius: 1.6rem;
-  font-size: 1.2rem;
-  text-align: center;
-  transition-duration: 1s;
-  background: #ffa500;
-  color: #000;
+.full-width {
+  width: 100%;
 }
 
-.btn-comentarios:hover {
-  background: #000;
-  color: #ffa500;
+.min-width {
+  width: 50%;
 }
 
-p {
-  font-family: "monserrat";
-  color: rgb(46, 2, 42);
-  font-size: 1rem;
-  padding: 3, 4rem;
-}
-
-footer {
-  background-color: rgb(10, 3, 6);
-  text-align: right;
-  padding-right: 5%;
-}
-footer h1 {
+.button {
+  position: relative;
   display: inline-block;
-  color: white;
-}
-footer a {
-  color: chartreuse;
-}
-
-.contribucion {
-  text-align: right;
-  font-size: x-small;
-}
-
-table {
-  margin: auto;
-  margin-top: 2.5rem;
-  padding: 1.6rem;
-  border-style: double;
-  border-color: black;
-  width: 90%;
-  border-collapse: collapse;
-  border: 5px solid;
-}
-
-th {
-  border: black double;
-  border-width: 1px;
-  font-size: 1.6rem;
-}
-
-td {
-  border: black solid;
-  border-width: 1px;
-  padding: 0.7rem;
-  font-size: 1.4rem;
+  height: 60px;
+  padding: 0 35px;
+  background-color: var(--red);
+  color: var(--white);
+  line-height: 60px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: all 0.3s;
 }
 
 /* ------------------------------------NAVBAR STYLES-------------------------------------- */
 
 .nav-bg {
-  padding: 10px;
+  padding: 15px;
   background: var(--red);
 }
 
@@ -161,9 +100,12 @@ td {
 }
 
 .nav-list li {
-  font-size: 16px;
-  font-weight: 500;
+  font-weight: 700;
   margin-right: 20px;
+}
+
+.nav-list .list-item .nav-link i {
+  fill: var(--black);
 }
 
 /* ------------------------------------FORM LOGIN STYLES-------------------------------------- */
@@ -179,7 +121,6 @@ td {
   left: 0;
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
   object-fit: cover;
 }
 
@@ -284,9 +225,9 @@ td {
 /* ----------------------------------------------------------------------------------------------- */
 
 /* ----------------------------------------TABLE STYLES------------------------------------------- */
-.wrapper {
+/* .wrapper {
   width: 100%;
-  margin: 20px auto 100px auto;
+  margin-top: 10px;
   padding: 0;
   overflow: hidden;
   position: relative;
@@ -301,14 +242,12 @@ td {
   margin: 0;
   font-size: 16px;
   font-weight: normal;
-  list-style: none;
   display: inline-block;
   width: 20%;
-  box-sizing: border-box;
 }
 
 .title ul li {
-  padding: 15px 13px;
+  padding: 15px;
 }
 
 .row ul li {
@@ -316,8 +255,7 @@ td {
 }
 
 .row {
-  padding: 20px 0;
-  height: 65px;
+  height: 75px;
   font-size: 0;
   position: relative;
   overflow: hidden;
@@ -325,28 +263,33 @@ td {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.row:hover {
+.article-list:hover {
   background-color: rgba(26, 26, 26, 0.9);
 }
 
 .title {
-  height: 55px;
-  font-size: 0;
+  height: 75px;
   background-color: rgba(255, 255, 255, 0.1);
-  border-left: 3px solid rgba(255, 255, 255, 0.1);
 }
 
-.row-fadeOut-wrapper {
-  font-size: 0;
+.row-wrapper {
   overflow: hidden;
   position: relative;
   transition: all 0.2s ease-out;
   animation: fadeOut 0.4s ease-out 8s 1 alternate;
   animation-fill-mode: forwards;
   opacity: 1;
-  height: 65px;
+  height: 75px;
 }
 
+.button .ver {
+  background-color: var(--white-blue);
+}
+
+.button .editar {
+  background-color: var(--white-blue);
+}
+ */
 /* 
 ul.more-content li {
   position: relative;
@@ -362,30 +305,100 @@ ul.more-content li {
  */
 /* ----------------------------------------------------------------------------------------------- */
 
-@media only screen and (max-width: 700px) {
-  table,
-  tr,
-  td,
-  th {
-    font-size: 0.6rem;
-  }
+/* ---------------------------------------GRID CARDS STYLES--------------------------------------- */
 
-  h1 {
-    font-size: 2.3rem;
-  }
+.cards-wrapper {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+  /* padding: 15px; */
+}
 
-  p {
-    font-size: 1.1rem;
-  }
-  .estrella {
-    width: 0.8rem;
-  }
-  .header2 {
-    margin-left: 20%;
-  }
-  .header2 div {
-    font-size: 1.2rem;
-    display: inline;
-    vertical-align: top;
-  }
+.card-grid-space {
+  margin-top: 10px;
+}
+
+.flip-card-container {
+  width: 310px;
+  height: 400px;
+}
+
+/* .flip-card */
+.flip-card {
+  width: inherit;
+  height: inherit;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: 0.6s 0.1s;
+}
+
+.num {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.flip-card-container:hover .flip-card,
+.flip-card-container:focus-within .flip-card {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  background: #000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+/* .card-front */
+.card-front {
+  transform: rotateY(0deg);
+  z-index: 2;
+}
+
+/* .card-back */
+.card-back {
+  transform: rotateY(180deg);
+  z-index: 1;
+}
+
+/* figure */
+.figura {
+  z-index: -1;
+}
+
+/* figure, .img-bg */
+.figura,
+.img-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* figcaption */
+.back-caption {
+  display: flex;
+  justify-content: center;
+  width: auto;
+  text-align: center;
+  margin-top: 10px;
+  padding: 5px;
+  font-weight: bold;
+  line-height: 1.6;
+  color: var(--white);
 }

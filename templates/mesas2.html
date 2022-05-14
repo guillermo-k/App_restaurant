@@ -1,0 +1,62 @@
+<!-- {% extends "/base.html" %} {% set active_page = 'mesas' %} {% block titulo
+%}Mesas{% endblock %} {% block header %}Mesas{% endblock %} {% block main %}
+<section class="wrapper">
+  <main class="row title">
+    <ul>
+      <li>Mesa</li>
+      <li>Pedidos</li>
+      <li>Total</li>
+      <li></li>
+    </ul>
+  </main>
+  {% for mesa in mesas %}
+  <section class="row-wrapper">
+    <article class="row article-list">
+      <ul>
+        <li class="col-1 d-flex justify-content-center">{{mesa[0]}}</li>
+        <li class="col d-flex justify-content-center">
+          <div id="{{mesa[0]}}" style="display: none">
+            <table>
+              <thead>
+                <th>Plato</th>
+                <th>Sub-Total</th>
+              </thead>
+              {% for it in mesa[1] %}
+              <tr>
+                <td style="text-align: right; padding-right: 2rem">
+                  <u>{{it[0]}}</u>
+                </td>
+                <td style="text-align: right; padding-right: 2rem">
+                  $ {{it[1]}}
+                </td>
+              </tr>
+              {% endfor %}
+            </table>
+          </div>
+          <button
+            onclick='ver("{{mesa[0]}}")'
+            data-toggle="modal"
+            class="button min-width ver {{mesa[0]}}"
+          >
+            Ver
+          </button>
+        </li>
+        <li class="col d-flex justify-content-center">$ {{mesa[2]}}</li>
+        <li class="col-1 d-flex justify-content-center">
+          <a href="../platos/{{mesa[0]}}">
+            <button class="button editar min-width">Editar Pedido</button> </a
+          ><br />
+          {% if mesa[2] >0 %}
+
+          <a href="/cerrar_cuenta/{{mesa[0]}}"
+            ><button>Cerrar cuenta</button></a
+          >
+          {% endif %}
+        </li>
+      </ul>
+    </article>
+  </section>
+  {% endfor %}
+</section>
+{% endblock %}
+ -->

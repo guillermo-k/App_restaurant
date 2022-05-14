@@ -35,34 +35,44 @@
         <div class="main-nav">
           <ul class="nav-list">
             <li class="list-item">
-              <a class="nav-link {{'active' if active_page == 'mesas' }}">
+              <a
+                class="nav-link {{'active' if active_page == 'mesas' }}"
+                href="/mesas"
+              >
                 Mesas
               </a>
             </li>
             <li class="list-item">
-              <a class="nav-link {{'active' if active_page == 'mesas' }}">
+              <a
+                class="nav-link {{'active' if active_page == 'ventas' }}"
+                href="/ventas"
+              >
                 Historial
               </a>
             </li>
             <li class="list-item">
-              <a class="nav-link {{'active' if active_page == 'mesas' }}">
+              <a
+                class="nav-link {{'active' if active_page == 'administracion' }}"
+                href="/administracion"
+              >
                 Administración
               </a>
             </li>
             <li class="list-item">
-              <a class="nav-link" href="/logout">Cerrar sesión</a>
+              <a class="nav-link" href="/logout"
+                ><i class="fa-light fa-arrow-right-to-bracket"></i> Cerrar
+                sesión</a
+              >
             </li>
           </ul>
         </div>
       </div>
     </nav>
-
     <div class="container">
       <header>
-        <h1 class="my-3">{% block header %} {% endblock %}</h1>
+        <h2 class="my-3">{% block header %} {% endblock %}</h2>
 
         {% block producto %} {% endblock %}
-        <hr />
       </header>
       {% endif %} {% with messages= get_flashed_messages() %} {% if messages %}
       <div class="alert alert-danger" role="alert">

@@ -1,55 +1,51 @@
-{% extends "/base.html" %}
-
-{% set active_page = 'mesas' %}
-
-{% block titulo %}Mesas{% endblock %}
-
-{% block header %}Mesas{% endblock %}
-
-{% block main %}
-<div class="container mt-3">
-    <div class="row my-2 fw-bold">
-        <div class="col-1 d-flex justify-content-center">Mesa</div>
-        <div class="col d-flex justify-content-center">Pedidos</div>
-        <div class="col d-flex justify-content-center">Total</div>
-        <div class="col-1 d-flex justify-content-center"></div>
-    </div>
-    {% for mesa in mesas %}
-    <div class="row">
-        <div class="col-1 d-flex justify-content-center">{{mesa[0]}}</div>
-        <div class="col d-flex justify-content-center">
-            <div id="{{mesa[0]}}" style="display: none;">
-                <table>
-                    <thead>
-                        <th>Plato</th>
-                        <th>Sub-Total</th>
-                    </thead>
-                    {% for it in mesa[1] %}
-                    <tr>
-                        <td style="text-align: right; padding-right: 2rem;">
-                            <u>{{it[0]}}</u>
-                        </td>
-                        <td style="text-align: right; padding-right: 2rem;">$ {{it[1]}}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
-            <button onclick='ver("{{mesa[0]}}")' class="btn-comentarios {{mesa[0]}}">Ver</button>
+{% extends "/base.html" %} {% set active_page = 'mesas' %} {% block titulo
+%}Mesas{% endblock %} {% block header %}Mesas{% endblock %} {% block main %}
+<section class="cards-wrapper">
+  {% for mesa in mesas %}
+  <div class="card-grid-space">
+    <div class="flip-card-container">
+      <div class="flip-card">
+        <div class="card-front">
+          <div class="num">
+            <h4>MESA N°{{mesa[0]}}</h4>
+          </div>
+          <figure class="figura">
+            <div class="img-bg"></div>
+          </figure>
+          <button
+            onclick='ver("{{mesa[0]}}")'
+            class="button min-width ver {{mesa[0]}}"
+          >
+            VER
+          </button>
         </div>
-        <div class="col d-flex justify-content-center">$ {{mesa[2]}}</div>
-        <div class="col-1 d-flex justify-content-center">
-            <a href="../platos/{{mesa[0]}}">
-                <i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" title="Editar pedido"></i>
-            </a><br>
-            {% if mesa[2] >0 %}
-            
-            <a href="/cerrar_cuenta/{{mesa[0]}}"><button>Cerrar cuenta</button></a>
-            {% endif %}
-        </div>
-    </div>
-    {% endfor %}
-    
-    
-</div>
+        <div id="{{mesa[0]}}" class="card-back">
+          <figure class="figura">
+            <div class="img-bg"></div>
+            <figcaption class="back-caption">
+              <h4>PEDIDOS DE MESA N°{{mesa[0]}}</h4>
+            </figcaption>
+          </figure>
+          {% for it in mesa[1] %}
+          <ul>
+            <li><strong>Platos: </strong>{{it[0]}}</li>
+            <li><strong>Sub-Total: </strong>$ {{it[1]}}</li>
+          </ul>
+          {% endfor %}
+          <div><strong>Total: </strong> $ {{mesa[2]}}</div>
+          <a href="../platos/{{mesa[0]}}">
+            <button class="button editar">Editar Pedido</button>
+          </a>
+          {% if mesa[2] >0 %}
 
+          <a href="/cerrar_cuenta/{{mesa[0]}}"
+            ><button class="button editar">Cerrar cuenta</button></a
+          >
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</section>
 {% endblock %}

@@ -81,8 +81,9 @@ conn.commit()  # Cerramos conexión con DB
 @app.route('/')
 def login():
     cookie = request.cookies.get('mesas')
-    global cantidad_mesas
-    cantidad_mesas = int(cookie)
+    if cookie:
+        global cantidad_mesas
+        cantidad_mesas = int(cookie)
     return render_template('/index.html')
 
 

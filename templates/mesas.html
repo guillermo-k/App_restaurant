@@ -4,6 +4,12 @@
   {% for mesa in mesas %}
   <div class="card-grid-space">
     <div class="flip-card-container">
+      <input
+        type="checkbox"
+        id="{{mesa[0]}}"
+        class="details"
+        aria-hidden="true"
+      />
       <div class="flip-card">
         <div class="card-front">
           <div class="num">
@@ -13,40 +19,43 @@
             <div class="img-bg">
               <img
                 src="https://images.pexels.com/photos/326333/pexels-photo-326333.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=450&w=340"
-                alt=""
+                alt="mesa de madera"
               />
             </div>
           </figure>
-          {% if mesa[1]|length == 0 %}
-          <button id="show-back" class="button min-width ver">VER</button>
-          {% endif %} {% if mesa[1]|length > 0 %}
-          <span>Mesa Disponible</span>
-          <button id="show-back" class="button min-width ver">VER</button>
-          {% endif %}
+          <label for="{{mesa[0]}}" class="button-small" aria-hidden="true">
+            Ver Pedidos
+          </label>
         </div>
-        <div id="{{mesa[0]}}" class="card-back">
+        <div class="card-back">
           <figure class="figura">
             <div class="img-bg"></div>
             <figcaption class="back-caption">
               <h4>PEDIDOS DE MESA N°{{mesa[0]}}</h4>
             </figcaption>
           </figure>
-          {% for it in mesa[1] %}
           <ul>
-            <li><strong>Platos: </strong>{{it[0]}}</li>
-            <li><strong>Sub-Total: </strong>$ {{it[1]}}</li>
+            {% for it in mesa[1] %}
+            <li>
+              <strong>Platos: </strong>{{it[0]}}........
+              <strong> $ {{it[1]}}</strong>
+            </li>
+            {% endfor %}
           </ul>
-          {% endfor %}
-          <div><strong>Total: </strong> $ {{mesa[2]}}</div>
-          <a href="../platos/{{mesa[0]}}">
-            <button class="button editar">Editar Pedido</button>
-          </a>
-          {% if mesa[2] >0 %}
-
-          <a href="/cerrar_cuenta/{{mesa[0]}}"
-            ><button class="button editar">Cerrar cuenta</button></a
-          >
-          {% endif %}
+          <div class="total-price"><strong>Total: </strong> $ {{mesa[2]}}</div>
+          <div class="button-wrap">
+            <a href="../platos/{{mesa[0]}}">
+              <button class="button-editar">
+                <i class="fi fi-sr-pencil"></i>
+              </button>
+            </a>
+            {% if mesa[2] >0 %}
+            <a href="/cerrar_cuenta/{{mesa[0]}}"
+              ><button class="button-small">
+                <i class="fi fi-sr-receipt"></i></button
+            ></a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>

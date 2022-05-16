@@ -444,13 +444,18 @@ def ventas():
         if desde and hasta:
             sql = """SELECT * FROM `my_resto`.`ventas`
             WHERE `hora_abre` BETWEEN %s AND %s"""
-            if mesa and mesa != 'todas':
-                sql += ' AND `mesa` LIKE %s'
-                datos.append(int(mesa))
+            if mesa:
+                if mesa != 'Todas':
+                    sql += ' AND `mesa` LIKE %s'
+                    datos.append(int(mesa))
+            else:
+                mesa = 'Todas'
             cursor.execute(sql, datos)
             ventas = list(cursor.fetchall())
             fechasMin = desde
             fechasMax = hasta
+        else:
+            mesa = 'Todas'
         fechasMinMax = (fechasMin, fechasMax)
         total = 0
         for i in range(len(ventas)):
@@ -462,7 +467,8 @@ def ventas():
                                ventas=ventas,
                                total=total,
                                fechasMinMax=fechasMinMax,
-                               listaMesas=listaMesas)
+                               listaMesas=listaMesas,
+                               mesa=mesa)
     flash('Usuario no autorizado a ver el historial')
     return redirect('/mesas')
 

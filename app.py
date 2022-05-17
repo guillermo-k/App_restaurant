@@ -25,13 +25,21 @@ conn = mysql.connect()
 cursor = conn.cursor()
 cursor.execute("CREATE DATABASE IF NOT EXISTS `my_resto`;")
 
+cursor.execute("""CREATE TABLE IF NOT EXISTS `my_resto`.`categorias` (
+    `id_categoria` INT(10) NOT NULL AUTO_INCREMENT,
+    `categoria` VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`id_categoria`))""")
+
 cursor.execute("""CREATE TABLE IF NOT EXISTS `my_resto`.`platos` (
     `id_plato` INT(10) NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(255) NOT NULL ,
     `descripcion_plato` VARCHAR(5000) NOT NULL ,
     `precio` FLOAT NOT NULL ,
     `foto` VARCHAR(5000) NOT NULL,
-    PRIMARY KEY (`id_plato`) );""")
+    `id_categoria` INT(10) NOT NULL,
+    PRIMARY KEY (`id_plato`),
+    FOREIGN KEY (`id_categoria`) REFERENCES `my_resto`.`categorias`(
+    `id_categoria`));""")
 
 cursor.execute("""CREATE TABLE IF NOT EXISTS `my_resto`.`mesas` (
     `id_mesa` INT(10) NOT NULL AUTO_INCREMENT,
@@ -169,11 +177,16 @@ def administracion():
         cursor = conn.cursor()
         cursor.execute("SELECT* FROM `my_resto`.`platos`;")
         platos = cursor.fetchall()
+        cursor.execute("SELECT* FROM `my_resto`.`categorias`;")
+        categorias = cursor.fetchall()
         conn.commit()
         """Renderizamos administracion.html
         pasando el menu y la cantidad de mesas seleccionadas"""
         return render_template(
-                'administracion.html', platos=platos, cantidad=cantidad_mesas)
+                'administracion.html',
+                platos=platos,
+                cantidad=cantidad_mesas,
+                categorias=categorias)
     else:
         return redirect('/')
 
@@ -181,6 +194,8 @@ def administracion():
 @app.route('/destroy/<int:id>')  # Recibe como parámetro el id del producto
 def destroy(id):
     """Borrado de plato por ID"""
+
+    
     if 'username' in session:
         conn = mysql.connect()
         cursor = conn.cursor()
@@ -189,6 +204,22 @@ def destroy(id):
         fila = cursor.fetchall()
         borrarFoto(fila[0][0])
         sql = "DELETE FROM `my_resto`.`platos` WHERE id_plato=%s"
+        cursor.execute(sql, (id))
+        conn.commit()
+        return redirect('/administracion')
+    else:
+        return redirect('/')
+
+
+@app.route('/destroyCategoria/<int:id>')  # Recibe como parámetro el id del producto
+def destroyCategoria(id):
+    """Borrado de categoria por ID"""
+
+
+    if 'username' in session:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        sql = "DELETE FROM `my_resto`.`categorias` WHERE id_categoria=%s"
         cursor.execute(sql, (id))
         conn.commit()
         return redirect('/administracion')
@@ -254,6 +285,34 @@ def update(id_plato=None):
             sql = """INSERT `my_resto`.`platos`
             (`nombre`,`descripcion_plato`, `precio`, `foto`)
             VALUES(%s,%s,%s,%s)"""
+        cursor.execute(sql, datos)
+        conn.commit()
+        return redirect('/administracion')
+    else:
+        return redirect('/')
+
+
+@app.route('/updateCategoria', methods=['POST'])
+@app.route('/updateCategoria/<int:id_categoria>', methods=['POST'])
+def updateCategoria(id_categoria=None):
+    """Categorias
+    Alta y modificaciones
+    """
+
+    if 'username' in session:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        categoria = request.form['txtCategoria'].capitalize().replace(' ', '_')
+        datos = [categoria]
+        if id_categoria is not None:
+            datos.append(id_categoria)
+            sql = """UPDATE `my_resto`.`categorias`
+            SET `categoria`=%s
+            WHERE id_categoria=%s"""
+        else:
+            sql = """INSERT `my_resto`.`categorias`
+            (`categoria`)
+            VALUES(%s)"""
         cursor.execute(sql, datos)
         conn.commit()
         return redirect('/administracion')

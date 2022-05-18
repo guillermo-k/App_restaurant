@@ -175,7 +175,12 @@ def administracion():
     if 'username' in session:
         conn = mysql.connect()
         cursor = conn.cursor()
-        cursor.execute("SELECT* FROM `my_resto`.`platos`;")
+        # `categorias`.`id_categoria`=`productos`.`id_categoria`
+        cursor.execute("""SELECT* FROM `my_resto`.`platos`,
+                            `my_resto`.`categorias` WHERE
+                            `categorias`.`id_categoria`=
+                            `platos`.`id_categoria`
+                            ORDER BY `categoria`;""")
         platos = cursor.fetchall()
         cursor.execute("SELECT* FROM `my_resto`.`categorias`;")
         categorias = cursor.fetchall()
@@ -195,7 +200,6 @@ def administracion():
 def destroy(id):
     """Borrado de plato por ID"""
 
-    
     if 'username' in session:
         conn = mysql.connect()
         cursor = conn.cursor()
@@ -211,10 +215,9 @@ def destroy(id):
         return redirect('/')
 
 
-@app.route('/destroyCategoria/<int:id>')  # Recibe como parámetro el id del producto
+@app.route('/destroyCategoria/<int:id>')
 def destroyCategoria(id):
     """Borrado de categoria por ID"""
-
 
     if 'username' in session:
         conn = mysql.connect()
@@ -234,11 +237,17 @@ def edit(id):
     if 'username' in session:
         conn = mysql.connect()
         cursor = conn.cursor()
-        sql = "SELECT * FROM `my_resto`.`platos` WHERE id_plato=%s"
+        sql = """SELECT* FROM `my_resto`.`platos`,
+                `my_resto`.`categorias` WHERE
+                `categorias`.`id_categoria`=`platos`.`id_categoria` AND
+                id_plato=%s"""
         cursor.execute(sql, (id))
         plato = list(cursor.fetchone())
+        cursor.execute("SELECT* FROM `my_resto`.`categorias`;")
+        categorias = cursor.fetchall()
         conn.commit()
-        return render_template('edit.html', plato=plato)
+        return render_template('edit.html', plato=plato,
+                               categorias=categorias)
     else:
         return redirect('/')
 
@@ -257,6 +266,7 @@ def update(id_plato=None):
         descripcion_plato = request.form['txtDescripcionPlato'].capitalize()
         precio = float(request.form['txtPrecio'])
         foto = request.files['txtFoto']
+        categoria = request.form['txtCategoria']
         now = datetime.now()
         tiempo = now.strftime('%Y%H%M%S_')
         extension = foto.filename.split('.')
@@ -272,20 +282,21 @@ def update(id_plato=None):
             nuevoNombreFoto = request.form['viejoNombreFoto']
             if nuevoNombreFoto == '':
                 nuevoNombreFoto = 'Sin foto'
-        datos = [nombre, descripcion_plato, precio, nuevoNombreFoto]
+        dato = [nombre, descripcion_plato, precio, nuevoNombreFoto, categoria]
         if id_plato is not None:
-            datos.append(id_plato)
+            dato.append(id_plato)
             sql = """UPDATE `my_resto`.`platos`
             SET `nombre`=%s,
             `descripcion_plato`=%s,
             `precio`=%s,
-            `foto`=%s
+            `foto`=%s,
+            `id_categoria`=%s
             WHERE id_plato=%s"""
         else:
             sql = """INSERT `my_resto`.`platos`
-            (`nombre`,`descripcion_plato`, `precio`, `foto`)
-            VALUES(%s,%s,%s,%s)"""
-        cursor.execute(sql, datos)
+            (`nombre`,`descripcion_plato`, `precio`, `foto`,`id_categoria`)
+            VALUES(%s,%s,%s,%s,%s)"""
+        cursor.execute(sql, dato)
         conn.commit()
         return redirect('/administracion')
     else:
@@ -302,8 +313,8 @@ def updateCategoria(id_categoria=None):
     if 'username' in session:
         conn = mysql.connect()
         cursor = conn.cursor()
-        categoria = request.form['txtCategoria'].capitalize().replace(' ', '_')
-        datos = [categoria]
+        cat = request.form['txtCategoria'].capitalize().replace(' ', '_')
+        datos = [cat]
         if id_categoria is not None:
             datos.append(id_categoria)
             sql = """UPDATE `my_resto`.`categorias`
@@ -393,7 +404,7 @@ def cargarPedido(mesa):
     else:
         hora = datetime.now()
         datos = [hora, mesa]
-        sql = "UPDATE `my_resto`.`mesas`SET `hora_abre`=%s WHERE `id_mesa`=%s;"
+        sql = "UPDATE `my_resto`.`mesas`SET`hora_abre`=%s WHERE `id_mesa`=%s;"
         cursor.execute(sql, datos)
         pedidos = {}
     keysDB = pedidos.keys()

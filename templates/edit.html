@@ -35,6 +35,17 @@ Editar plato
     </div><br>
     <div><img width="300px" src="../fotos/{{plato[4]}}" alt="{{plato[4]}}"></div>
     <br>
+    
+
+    <div>
+        <div><label for="txtCategoria">Categoria: </label>
+            <select name="txtCategoria" id="txtCategoria">
+                <option value="{{plato[5]}}">{{plato[7]}}</option>
+                {% for categoria in categorias %}
+                    <option value="{{categoria[0]}}">{{categoria[1]}}</option>
+                {% endfor %}
+            </select></div>
+    </div>
     <div><input type="submit" value="Modificar plato"></div>
     <input type="hidden" name="viejoNombreFoto" id="viejoNombreFoto" value="{{plato[4]}}">
 </form>

@@ -175,7 +175,6 @@ def administracion():
     if 'username' in session:
         conn = mysql.connect()
         cursor = conn.cursor()
-        # `categorias`.`id_categoria`=`productos`.`id_categoria`
         cursor.execute("""SELECT* FROM `my_resto`.`platos`,
                             `my_resto`.`categorias` WHERE
                             `categorias`.`id_categoria`=

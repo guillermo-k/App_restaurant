@@ -64,12 +64,17 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS `my_resto`.`ventas`(
 
 cursor.execute("SELECT count(*) FROM `my_resto`.`usuarios`")
 cantidadDeUsuarios = cursor.fetchone()[0]
+cursor.execute("SELECT count(*) FROM `my_resto`.`categorias`")
+cantidadCategorias = cursor.fetchone()[0]
 
 if cantidadDeUsuarios == 0:
     clave = cryptocode.encrypt('admin', app.secret_key)
     cursor.execute("""INSERT `my_resto`.`usuarios`(
         `usuario`,`password`,`super_usuario`)
         VALUES ('admin', %s, 1);""", (clave))
+if cantidadCategorias == 0:
+    cursor.execute("""INSERT IGNORE `my_resto`.`categorias` (`categoria`)
+    VALUES('Sin categoria')""")
 conn.commit()
 
 
@@ -222,8 +227,16 @@ def destroyCategoria(id):
     if 'username' in session:
         conn = mysql.connect()
         cursor = conn.cursor()
-        sql = "DELETE FROM `my_resto`.`categorias` WHERE id_categoria=%s"
-        cursor.execute(sql, (id))
+        sql1 = """SELECT `id_plato` FROM `my_resto`.`platos`
+            WHERE `id_categoria` LIKE %s"""
+        cursor.execute(sql1, id)
+        platos = cursor.fetchall()
+        sql2 = """UPDATE `my_resto`.`platos` SET `id_categoria`=1
+            WHERE id_plato=%s"""
+        for plato in platos:
+            cursor.execute(sql2, plato[0])
+        sql3 = "DELETE FROM `my_resto`.`categorias` WHERE id_categoria=%s"
+        cursor.execute(sql3, (id))
         conn.commit()
         return redirect('/administracion')
     else:

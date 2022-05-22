@@ -521,7 +521,10 @@ def ventas():
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM `my_resto`.`ventas`")
         ventas = list(cursor.fetchall())
-        fechasMin = (str((ventas[0][2]))).split(' ')[0]
+        if len(ventas) > 0:
+            fechasMin = (str((ventas[0][2]))).split(' ')[0]
+        else:
+            fechasMin = datetime.today().strftime('%Y-%m-%d')
         fechasMax = datetime.today().strftime('%Y-%m-%d')
         cursor.execute("SELECT count(*) FROM `my_resto`.`mesas`")
         totalMesas = cursor.fetchone()[0]

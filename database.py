@@ -91,7 +91,7 @@ def load_test_data(mysql):
             my_resto.platos (nombre,descripcion_plato,precio,foto,id_categoria)
         VALUES
             ('Tabla Clásica',
-             'Salame, queso, aceitumas, jamón crudo 
+             'Salame, queso, aceitumas, jamón crudo
                 y cocido',2000,'Sin foto',2),
 
             ('Tabla Ahumados',
@@ -103,7 +103,7 @@ def load_test_data(mysql):
             ('Agua','600ml',280,'Sin foto',3),
 
             ('Sidra Pera','750ml',550,'Sin foto',4),
-             
+
             ('Milanesa Maryland',
              'Milanesa con bananas fritas',1200,'Sin foto',5);
         """)

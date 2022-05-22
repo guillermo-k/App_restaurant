@@ -12,11 +12,12 @@
 ```
 
 ## Descripción
+Este PR surge para solucionar el issue #(nro de issue)
+
 Resumen de funcionamiento de la feature.
 Contexto.
 Documentación relacionada (enlaces).
 
-Este PR surge para solcionar el issue #(nro de issue)
 
 
 ## Cambio realizado
@@ -29,7 +30,7 @@ Por favor, borrá las opciones que no correspondan
 * Este cambio requiere actualización de la documentación
 
 
-## ¿Cómo fue probado este cambio?
+## Tests
 
 Por favor describí los tests que realizaste para vericar el comportamiento de este cambio. Agregá toda la información y configuraciones necesarias para reproducir los tests.
 - [ ] Test A

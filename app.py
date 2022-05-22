@@ -34,7 +34,7 @@ database.create(mysql)
 database.create_admin_user(mysql, app.secret_key)
 database.define_default_category(mysql)
 
-if os.environ['FLASK_DEBUG'].lower() in ('1', 'true'):
+if os.environ.get('FLASK_DEBUG', '').lower() in ('1', 'true'):
     database.load_test_data(mysql)
 
 

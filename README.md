@@ -34,7 +34,7 @@
 - Iniciar MySQL Server o Iniciar XAMPP
 - Correr la app
   ```bash
-  export FLASK_APP=app; export FLASK_ENV=development; flask run
+  export FLASK_DEBUG=True; export FLASK_APP=app; export FLASK_ENV=development; flask run
   ```
 
   En Ubuntu, caso de recibir el error, (1698, "Access denied for user 'root'@'localhost'"), [consultar aquí](https://stackoverflow.com/questions/39281594/error-1698-28000-access-denied-for-user-rootlocalhost)

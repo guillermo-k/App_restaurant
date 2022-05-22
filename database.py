@@ -43,10 +43,12 @@ def create(mysql):
         `total` INT(10),
         PRIMARY KEY (`id_venta`));""")
 
+    conn.commit()
+
 
 def create_admin_user(mysql, secret_key):
     conn = mysql.connect()
-    cursor = conn.cursor()
+    cursor = conn.cursor()    
     cursor.execute("SELECT count(*) FROM `my_resto`.`usuarios`")
     cantidad_de_usuarios = cursor.fetchone()[0]
     if cantidad_de_usuarios == 0:
@@ -65,4 +67,36 @@ def define_default_category(mysql):
     if cantidad_de_categorias == 0:
         cursor.execute("""INSERT IGNORE `my_resto`.`categorias` (`categoria`)
         VALUES('Sin categoria')""")
+    conn.commit()
+
+
+def load_test_data(mysql):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    cursor.execute("SELECT count(*) FROM `my_resto`.`categorias`")
+    test_data_count = cursor.fetchone()[0]
+    if test_data_count <= 1:
+        cursor.execute("""
+        INSERT INTO
+            my_resto.categorias (categoria)
+        VALUES
+            ('tabla'),
+            ('bebida s/a'),
+            ('bebida c/a'),
+            ('minuta');
+        """)
+
+        cursor.execute("""
+        INSERT INTO
+            my_resto.platos (nombre,descripcion_plato,precio,foto,id_categoria)
+        VALUES
+            ('Tabla Clásica','Salame, queso, aceitumas, jamón crudo y cocido',2000,'Sin foto',2),
+            ('Tabla Ahumados','Ciervo, cordero, jabalí, trucha, queso ahumado, cherrys, gouda paté y aceitunas',2500,'Sin foto',2),
+            ('Coca Cola','500ml',300,'Sin foto',3),
+            ('Agua','600ml',280,'Sin foto',3),
+            ('Sidra Pera','750ml',550,'Sin foto',4),
+            ('Milanesa Maryland','Milanesa con bananas fritas',1200,'Sin foto',5);
+        """        
+        )
+
     conn.commit()

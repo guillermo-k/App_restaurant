@@ -2,8 +2,9 @@ import json
 from flask import Flask, redirect, render_template, request, session, flash
 from flaskext.mysql import MySQL
 from datetime import datetime
+
 import os
-from flask import send_from_directory
+from flask import send_from_directory, make_response
 import cryptocode
 
 cantidad_mesas = 3
@@ -80,6 +81,10 @@ conn.commit()
 
 @app.route('/')
 def login():
+    cookie = request.cookies.get('mesas')
+    if cookie:
+        global cantidad_mesas
+        cantidad_mesas = int(cookie)
     return render_template('/index.html')
 
 
@@ -100,8 +105,6 @@ def ingresar():
             session['username'] = usuario[0][0]
             if usuario[0][2]:
                 session['super'] = usuario[0][2]
-            global cantidad_mesas
-            cantidad_mesas = int(request.form['cantidad_mesas'])
             return redirect('/mesas')
         else:
             flash('Usuario o contraseña erroneos')
@@ -457,7 +460,9 @@ def cantidadMesas():
         cursor.execute("INSERT `my_resto`.`mesas`(`pedidos`) VALUES(NULL)")
         mesas += 1
     conn.commit()
-    return redirect('/administracion')
+    respuesta = make_response(redirect('/administracion'))
+    respuesta.set_cookie('mesas', str(cantidad_mesas))
+    return respuesta
 
 
 @app.route('/cerrar_cuenta/<int:mesa>/')

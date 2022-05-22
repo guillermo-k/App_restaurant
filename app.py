@@ -36,7 +36,7 @@ database.define_default_category(mysql)
 
 if os.environ['FLASK_DEBUG'].lower() in ('1', 'true'):
     database.load_test_data(mysql)
-    
+
 
 @app.route('/')
 def login():

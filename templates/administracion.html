@@ -11,6 +11,7 @@
 <button onclick="desplegar('editarUsuario')" class="btn-comentarios">Editar mis datos</button>
 <button onclick="desplegar('editarPlatos')" class="btn-comentarios">Platos</button>
 <button onclick="desplegar('cantidadMesas')" class="btn-comentarios">Cantidad de mesas</button>
+<button onclick="desplegar('editarCategoria')" class="btn-comentarios">Categorias</button>
 
 <div id="agregarUsuario" style="display: none;">
     <div class="container mt-3"></div>
@@ -78,6 +79,7 @@
             <div class="col">Nombre</div>
             <div class="col">Descripción</div>
             <div class="col">Precio</div>
+            <div class="col">Categoria</div>
             <div class="col"></div>
         </div>
         
@@ -87,6 +89,7 @@
             <div class="col">{{plato[1]}}</div>
             <div class="col">{{plato[2]}}</div>
             <div class="col">{{plato[3]}}</div>
+            <div class="col">{{plato[7]}}</div>
             <div class="col">
                 <a href="/edit/{{plato[0]}}"><i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" title="Editar"></i></a> <a
                     onclick="return confirm('¿Desea borrar {{plato[1]}}?')"
@@ -116,12 +119,22 @@
                     <div class="col"><textarea type="text" name="txtDescripcionPlato" id="txtDescripcionPlato"></textarea></div>
                 </div>
 
-                <div class="row">                
+                <div class="row">
                     <div class="col-1"><label for="txtPrecio">Precio: </label></div>
                     <div class="col"><input type="text" name="txtPrecio" id="txtPrecio"></div>
                 </div>
 
-                <div class="row">   
+                <div class="row">
+                    <div class="col-1"><label for="txtCategoria">Categoria: </label></div>
+                    <div class="col">
+                        <select name="txtCategoria" id="txtCategoria">
+                            {% for categoria in categorias %}
+                                <option value="{{categoria[0]}}">{{categoria[1]}}</option>
+                            {% endfor %}
+                        </select></div>
+                </div>
+
+                <div class="row">
                     <div class="col-1"><input type="hidden" name="viejoNombreFoto" id="viejoNombreFoto" value=""></div>
                     <div class="col"><input type="submit" value="Cargar nuevo plato"></div>
                 </div>
@@ -130,6 +143,55 @@
             </div>
         </form>
     </div>
+</div>
+</div>
+
+
+
+<div id="editarCategoria" style="display: none;">
+    <div class="container mt-3">
+        <div class="row my-2 fw-bold">
+            <div class="col">Categoria</div>
+            <div class="col"></div>
+            <div class="col"></div>
+        </div>
+        
+        {% for categoria in categorias[1:] %}
+        <div class="row">
+            <div class="col" id="{{categoria[1]}}">{{categoria[1]}}</div>
+            <div class="col" style="display: none;" id="{{categoria[0]}}">
+                <form action="/updateCategoria/{{categoria[0]}}", method="post" >
+                    <input type="text" value="{{categoria[1]}}" name="txtCategoria">
+                    <button type="submit"><i class="fa-solid fa-floppy-disk" data-bs-toggle="tooltip" title="Guargar cambios en {{categoria[1]}}"></i></button>
+                </form>
+            </div>
+            <div class="col">
+                    <i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" title="Editar" onclick="cambiar('{{categoria[0]}}','{{categoria[1]}}')"></i>
+                     <a
+                    onclick="return confirm('¿Desea borrar {{categoria[1]}}?')"
+                    href="/destroyCategoria/{{categoria[0]}}"><i class="fa-solid fa-trash-can" data-bs-toggle="tooltip" title="Borrar"></i></a>
+            </div>
+        </div>
+        {% endfor %}
+
+    <button onclick="ver('agregarCategoria')" class="btn-comentarios">Agregar categoria</button>
+
+    <div id="agregarCategoria" style="display: none;">
+        <form name="formulario" action="/updateCategoria" method="POST" >
+            <div class="container my-3">
+                <h2>Agregar categoria</h2>
+                <div class="row">
+                    <div class="col-1"><label for="txtCategoria">Categoria: </label></div>
+                    <div class="col"><input type="text" name="txtCategoria" id="txtCategoria"></div>
+                </div>
+
+                <div class="col"><input type="submit" value="Cargar nueva categoria"></div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
 </div>
 
     

@@ -90,21 +90,21 @@ def load_test_data(mysql):
         INSERT INTO
             my_resto.platos (nombre,descripcion_plato,precio,foto,id_categoria)
         VALUES
-            ('Tabla Clásica',
+            ('Tabla_Clásica',
              'Salame, queso, aceitumas, jamón crudo
                 y cocido',2000,'Sin foto',2),
 
-            ('Tabla Ahumados',
+            ('Tabla_Ahumados',
              'Ciervo, cordero, jabalí, trucha, queso
                 ahumado, cherrys, gouda paté y aceitunas',2500,'Sin foto',2),
 
-            ('Coca Cola','500ml',300,'Sin foto',3),
+            ('Coca_Cola','500ml',300,'Sin foto',3),
 
             ('Agua','600ml',280,'Sin foto',3),
 
-            ('Sidra Pera','750ml',550,'Sin foto',4),
+            ('Sidra_Pera','750ml',550,'Sin foto',4),
 
-            ('Milanesa Maryland',
+            ('Milanesa_Maryland',
              'Milanesa con bananas fritas',1200,'Sin foto',5);
         """)
 

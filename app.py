@@ -14,8 +14,6 @@ from flaskext.mysql import MySQL
 
 import database
 
-cantidad_mesas = 3
-
 app = Flask(__name__)
 
 app.secret_key = '123Prueba!'
@@ -23,6 +21,7 @@ app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = ''
 app.config['CARPETA'] = os.path.join('fotos')
+app.config['CANTIDAD_DE_MESAS'] = int()
 
 
 mysql = MySQL()
@@ -39,8 +38,7 @@ database.define_default_category(mysql)
 def login():
     cookie = request.cookies.get('mesas')
     if cookie:
-        global cantidad_mesas
-        cantidad_mesas = int(cookie)
+        app.config['CANTIDAD_DE_MESAS'] = int(cookie)
     return render_template('/index.html')
 
 
@@ -78,26 +76,29 @@ def mesas():
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute("SELECT `id_mesa`,`pedidos` FROM `my_resto`.`mesas`")
-        mesas = cursor.fetchall()
-        mesas = list(mesas)
-        for indexMesa in range(len(mesas)):
+        mesas_backend = cursor.fetchall()
+        mesas = list()
+        for mesa in mesas_backend:
+            nro_de_mesa = mesa[0]
+            pedido = mesa[1]
             suma = 0
-            mesas[indexMesa] = list(mesas[indexMesa])
-            mesas[indexMesa][1] = (str(mesas[indexMesa][1])[1:-1]).split(',')
-            for indicePedido in range(len(mesas[indexMesa][1])):
-                plato = mesas[indexMesa][1][indicePedido].split(': ')
-                cursor.execute("""SELECT `precio` FROM `my_resto`.`platos`
-                WHERE `nombre` LIKE %s;""", (plato[0].strip()[1:-1]))
-                precio = cursor.fetchall()
-                if len(mesas[indexMesa][1][indicePedido]) > 3:
-                    i = mesas[indexMesa][1]
-                    i[indicePedido] = (
-                        i[indicePedido], precio[0][0]*int(plato[1]))
-                    suma += precio[0][0]*int(plato[1])
-                else:
-                    mesas[indexMesa][1][indicePedido] = ['Sin pedidos', 0]
-            mesas[indexMesa].append(suma)
-        mesas = mesas[:cantidad_mesas]
+            subtotales = list()
+            if pedido:
+                pedido = json.loads(pedido)  # mesa[1] trae un json
+                for plato, cantidad in pedido.items():
+                    cursor.execute("""SELECT `precio` FROM `my_resto`.`platos`
+                                   WHERE `nombre` LIKE %s;""", (plato))
+                    precio_unitario = cursor.fetchone()[0]
+                    subtotal_por_plato = precio_unitario * int(cantidad)
+                    subtotales.append((f'{plato}: {cantidad}',
+                                       subtotal_por_plato))
+                    suma += subtotal_por_plato
+            else:
+                subtotales.append(['Sin pedidos', 0])
+            mesas.append([nro_de_mesa, subtotales, suma])
+
+        # Acotamos la cantidad de mesas al número indicado por el usuario
+        mesas = mesas[:app.config['CANTIDAD_DE_MESAS']]
         return render_template('/mesas.html', mesas=mesas)
     else:
         flash('Debe registrarse antes')
@@ -153,7 +154,7 @@ def administracion():
         return render_template(
                 'administracion.html',
                 platos=platos,
-                cantidad=cantidad_mesas,
+                cantidad=app.config['CANTIDAD_DE_MESAS'],
                 categorias=categorias)
     else:
         return redirect('/')
@@ -168,8 +169,8 @@ def destroy(id):
         cursor = conn.cursor()
         cursor.execute("""SELECT foto FROM `my_resto`.`platos`
         WHERE id_plato=%s""", id)
-        fila = cursor.fetchall()
-        borrarFoto(fila[0][0])
+        fila = cursor.fetchone()[0]
+        borrar_foto(fila)
         sql = "DELETE FROM `my_resto`.`platos` WHERE id_plato=%s"
         cursor.execute(sql, (id))
         conn.commit()
@@ -244,17 +245,17 @@ def update(id_plato=None):
         if foto.filename != '':
             nuevoNombreFoto = tiempo+nombre+'.'+extension[1]
             foto.save('App_restaurant/fotos/'+nuevoNombreFoto)
-            if id_plato is not None:
+            if id_plato:
                 sql = 'SELECT foto FROM `my_resto`.`platos` WHERE id_plato=%s'
                 cursor.execute(sql, id_plato)
                 fotoVieja = cursor.fetchall()[0][0]
-                borrarFoto(fotoVieja)
+                borrar_foto(fotoVieja)
         else:
             nuevoNombreFoto = request.form['viejoNombreFoto']
             if nuevoNombreFoto == '':
                 nuevoNombreFoto = 'Sin foto'
         dato = [nombre, descripcion_plato, precio, nuevoNombreFoto, categoria]
-        if id_plato is not None:
+        if id_plato:
             dato.append(id_plato)
             sql = """UPDATE `my_resto`.`platos`
             SET `nombre`=%s,
@@ -286,7 +287,7 @@ def updateCategoria(id_categoria=None):
         cursor = conn.cursor()
         cat = request.form['txtCategoria'].capitalize().replace(' ', '_')
         datos = [cat]
-        if id_categoria is not None:
+        if id_categoria:
             datos.append(id_categoria)
             sql = """UPDATE `my_resto`.`categorias`
             SET `categoria`=%s
@@ -404,20 +405,19 @@ def cargarPedido(mesa):
 def cantidadMesas():
     """Cantidad de mesas del negocio"""
 
-    global cantidad_mesas
-    cantidad_mesas = int(request.form['cantidad_mesas'])
+    app.config['CANTIDAD_DE_MESAS'] = int(request.form['cantidad_mesas'])
     conn = mysql.connect()
     cursor = conn.cursor()
     cursor.execute("SELECT count(*) FROM `my_resto`.`mesas`")
     mesas = int(cursor.fetchone()[0])
     """Mientras que la cantidad de mesas existentes sea menor
     que la indicada por el usuario"""
-    while mesas < cantidad_mesas:
+    while mesas < app.config['CANTIDAD_DE_MESAS']:
         cursor.execute("INSERT `my_resto`.`mesas`(`pedidos`) VALUES(NULL)")
         mesas += 1
     conn.commit()
     respuesta = make_response(redirect('/administracion'))
-    respuesta.set_cookie('mesas', str(cantidad_mesas))
+    respuesta.set_cookie('mesas', str(app.config['CANTIDAD_DE_MESAS']))
     return respuesta
 
 
@@ -521,12 +521,11 @@ def ventas():
 
 @app.route('/seleccion_mesas/')
 def seleccionmesas():
-    global cantidad_mesas
-    cantidad_mesas = int(request.form['cantidad_mesas'])
+    app.config['CANTIDAD_DE_MESAS'] = int(request.form['cantidad_mesas'])
     return redirect('/mesas')
 
 
-def borrarFoto(nombre):
+def borrar_foto(nombre):
     """Borra la foto de 'App_restaurant/fotos' pasada por parametro"""
     try:
         os.remove('App_restaurant/fotos/' + nombre)

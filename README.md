@@ -52,3 +52,32 @@
 5. Agregá también la etiqueta `ready-for-review`
 6. Una vez aceptado el código, Gianfranco o Guillermo realizarán el merge a la rama main.
 
+## Rebase y solución de conflictos
+Te proponemos que antes de dar el toque final a tu rama, realices un rebase.
+
+Fuentes para leer al respecto de rebase:
+https://www.atlassian.com/git/tutorials/merging-vs-rebasing
+https://dev.to/amalv/a-cleaner-github-workflow-one-commit-per-pull-pequest-3ic1
+
+
+### En general, estos son los pasos que se siguen para hacer un rebase interactivo (etiqueta `-i`)
+1. Ir a rama main
+   ```git checkout main```
+
+2. Traer últimos cambios
+   ```git pull```
+
+3. Ir a la rama en la que deseás hacer rebase
+   ```git checkout rama```
+
+4. Realizar rebase
+   ```git rebase -i main```
+
+5. Aparecerá la opción de realizar pick o squash (y algunas otras). Dejá el primer commit como "pick" y cambiá los demás por "s" (o "squash") y guardá los cambios. Después de guardar, se abrirá un segundo diálogo, donde podrás elegir el mensaje del nuevo commit.
+
+6. Realizá un push forzado a tu rama
+   ```git push --force```
+
+Después de esta acción, debería quedar sólo un commit en esta rama.
+
+**Si hay conflictos**, se verá un mensaje al respecto luego del paso 4. [Este es un buen video para aprender a resolver conflictos de git.](https://www.youtube.com/watch?v=xNVM5UxlFSA&ab_channel=Ihatetomatoes)

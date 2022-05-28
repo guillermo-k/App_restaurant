@@ -18,18 +18,20 @@
 
 {% block main %}
     {% if "username" not in session %}
-        <form action="/ingresar" method="post" enctype="multipart/form-data">
-            <label for="txtUsuario">Usuario: </label>
-            <input type="text" name="txtUsuario" id="txtUsuario">
-            <br><br>
-            <label for="txtPassword">Contraseña: </label>
-            <input type="password" name="txtPassword" id="txtPassword"><br><br>
-            <input type="submit" value="Ingresar">
-        </form>
+        <div class="container">
+            <form action="/ingresar" method="post" enctype="multipart/form-data">
+                <div class="row my-2">
+                    <div class="col-1"><label for="txtUsuario">Usuario: </label></div>
+                    <div class="col-2"><input type="text" name="txtUsuario" id="txtUsuario"></div>
+                </div>
+                <div class="row my-2">
+                    <div class="col-1"><label for="txtPassword">Contraseña: </label></div>
+                    <div class="col-2"><input type="password" name="txtPassword" id="txtPassword"></div>
+                </div>
+                <div class="row my-2">
+                    <div class="col-3"><input type="submit" value="Ingresar" class="btn btn-outline-primary"></div>
+                </div>
+            </form>
+        </div>
     {% endif %}        
 {% endblock %}
-       
-
-
-
-

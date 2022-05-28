@@ -15,35 +15,42 @@
         <div class="col-1 d-flex justify-content-center"></div>
     </div>
     {% for mesa in mesas %}
+    {# Please note: {{ mesa['nro_mesa'] }} == {{ loop.index }} #}
     <div class="row">
-        <div class="col-1 d-flex justify-content-center">{{mesa[0]}}</div>
+        <div class="col-1 d-flex justify-content-center">{{ mesa['nro_mesa'] }}</div>
         <div class="col d-flex justify-content-center">
-            <div id="{{mesa[0]}}" style="display: none;">
+            <div id="{{ loop.index }}">
                 <table>
                     <thead>
                         <th>Plato</th>
+                        <th>Cantidad</th>
                         <th>Sub-Total</th>
                     </thead>
-                    {% for it in mesa[1] %}
+                    {% for item in mesa['pedido']['plato'] %}
                     <tr>
                         <td style="text-align: right; padding-right: 2rem;">
-                            <u>{{it[0]}}</u>
+                            <u>{{ mesa['pedido']['plato'][loop.index0] }}</u>
                         </td>
-                        <td style="text-align: right; padding-right: 2rem;">$ {{it[1]}}</td>
+                        <td style="text-align: right; padding-right: 2rem;">
+                            {{ mesa['pedido']['cantidad'][loop.index0] }}
+                        </td>
+                        <td style="text-align: right; padding-right: 2rem;">
+                            $ {{ mesa['pedido']['subtotales'][loop.index0] }}
+                        </td>
                     </tr>
                     {% endfor %}
                 </table>
             </div>
-            <button onclick='ver("{{mesa[0]}}")' class="btn-comentarios {{mesa[0]}}">Ver</button>
+            <!-- <button onclick='ver("{{ loop.index }}")' class="btn-comentarios {{ loop.index }}">Ver</button> -->
         </div>
-        <div class="col d-flex justify-content-center">$ {{mesa[2]}}</div>
+        <div class="col d-flex justify-content-center">$ {{ mesa['total'] }}</div>
         <div class="col-1 d-flex justify-content-center">
-            <a href="../platos/{{mesa[0]}}">
+            <a href="../platos/{{ mesa['nro_mesa'] }}">
                 <i class="fa-solid fa-pen-to-square" data-bs-toggle="tooltip" title="Editar pedido"></i>
             </a><br>
-            {% if mesa[2] >0 %}
+            {% if mesa['total'] > 0 %}
             
-            <a href="/cerrar_cuenta/{{mesa[0]}}"><button>Cerrar cuenta</button></a>
+            <a href="/cerrar_cuenta/{{ mesa['nro_mesa'] }}"><button>Cerrar cuenta</button></a>
             {% endif %}
         </div>
     </div>

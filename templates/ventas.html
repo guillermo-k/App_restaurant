@@ -37,7 +37,7 @@ Historial
         <div class="col d-flex justify-content-center">Apertura</div>
         <div class="col d-flex justify-content-center">Cierre</div>
         <div class="col d-flex justify-content-center">Consumo</div>
-        <div class="col-1">Monto</div>
+        <div class="col-1 d-flex justify-content-center">Monto</div>
     </div>
     
     {% for venta in ventas %}
@@ -46,9 +46,14 @@ Historial
         <div class="col d-flex justify-content-center">{{venta[2]}}</div>
         <div class="col d-flex justify-content-center">{{venta[3]}}</div>
         <div class="col d-flex justify-content-center">
-            {% for it in venta[4] %}
-            {{it}} <br>
-            {% endfor %}</div>
+            <div class="container my-2">
+                {% for it in venta[4] %}
+                <div class="row d-flex justify-content-center">
+                    {{it}}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
         <div class="col-1 d-flex justify-content-end">$ {{venta[5]}}</div>
     </div>
     {% endfor %}

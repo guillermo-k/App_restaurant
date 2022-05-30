@@ -14,35 +14,19 @@ Resumen
 {% block main %}
 <div class="container mt-3">
     <div class="row my-2 fw-bold">
-        <div class="col">Producto</div>
-        <div class="col">Valor</div>
+        <div class="col-3">Producto</div>
+        <div class="col-1">Valor</div>
     </div>
     <div class="row">
         {% for it in resumen[:-1] %}
-        <div class="col">{{it[0]}}:{{it[1]}}</div>
-        <div class="col">$ {{it[2]}}</div>
+        <div class="col-3">{{it[0]}}:{{it[1]}}</div>
+        <div class="col-1">$ {{it[2]}}</div>
         {% endfor %}
     </div>
+    <div class="row mt-3 fw-bold">
+        <div class="col-3 d-flex justify-content-end">Total</div>
+        <div class="col-1">$ {{resumen[-1]}}</div>
+    </div>
 </div>
-
-<table>
-    <thead>
-        <td>Producto</td>
-        <td>Valor</td>
-    </thead>
-    <tbody>
-        {% for it in resumen[:-1] %}
-        <tr>
-            <td> {{it[0]}}:{{it[1]}}</td>
-            <td>$ {{it[2]}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<div id="total"><h2>TOTAL= $ {{resumen[-1]}}</h2></div>
- <br>
-
-
-
 
 {% endblock %}

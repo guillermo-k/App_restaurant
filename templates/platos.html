@@ -18,7 +18,7 @@
                 <div class="col">Acciones</div>
             </div>
             {% for plato in platos %}
-            <div class="row">
+            <div class="row my-3">
                 <div class="col"><img width="100px" src="../fotos/{{plato[4]}}" alt="{{plato[4]}}"></div>
                 <div class="col"><u>{{plato[1]}}</u></div>
                 <div class="col">{{plato[2]}}</div>
@@ -42,9 +42,8 @@
             {% endfor %}
 
         </div>
-
        
-        <input type="submit" value="cargar">
+        <input class="btn btn-outline-secondary mt-3" type="submit" value="Cargar">
     </form>
 </div>
 {% endblock %}

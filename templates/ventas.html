@@ -14,39 +14,46 @@ Historial
 {% block main %}
 
 <div class="container mt-3">
+    <form action="/ventas/">
+        <label for="desde">Desde: </label>
+        <input type="date" name="desde" value={{fechasMinMax[0]}}>
+        <label for="hasta">Hasta: </label>
+        <input type="date" name="hasta" value={{fechasMinMax[1]}}>
+        <label for="mesa">Mesa: </label>
+        <select name="mesa">
+            <option value="{{mesa}}">{{mesa}}</option>
+            <option value="Todas">Todas</option>
+            {% for i in listaMesas %}
+            <option value="{{i}}">{{i}}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Filtrar">
+    </form>
+</div>
+
+<div class="container mt-3">
     <div class="row my-2 fw-bold">
         <div class="col-1 d-flex justify-content-center">Mesa</div>
         <div class="col d-flex justify-content-center">Apertura</div>
         <div class="col d-flex justify-content-center">Cierre</div>
         <div class="col d-flex justify-content-center">Consumo</div>
-        <div class="col-1">Monto</div>
+        <div class="col-1 d-flex justify-content-center">Monto</div>
     </div>
-    <div>
-        <form action="/ventas/">
-            <label for="desde">Desde: </label>
-            <input type="date" name="desde" value={{fechasMinMax[0]}}>
-            <label for="hasta">Hasta: </label>
-            <input type="date" name="hasta" value={{fechasMinMax[1]}}>
-            <label for="mesa">Mesa: </label>
-            <select name="mesa">
-                <option value="{{mesa}}">{{mesa}}</option>
-                <option value="Todas">Todas</option>
-                {% for i in listaMesas %}
-                <option value="{{i}}">{{i}}</option>
-                {% endfor %}
-            </select>
-            <input type="submit" value="Filtrar">
-    </form>
-    </div>
+    
     {% for venta in ventas %}
     <div class="row">
         <div class="col-1 d-flex justify-content-center">{{venta[1]}}</div>
         <div class="col d-flex justify-content-center">{{venta[2]}}</div>
         <div class="col d-flex justify-content-center">{{venta[3]}}</div>
         <div class="col d-flex justify-content-center">
-            {% for it in venta[4] %}
-            {{it}} <br>
-            {% endfor %}</div>
+            <div class="container my-2">
+                {% for it in venta[4] %}
+                <div class="row d-flex justify-content-center">
+                    {{it}}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
         <div class="col-1 d-flex justify-content-end">$ {{venta[5]}}</div>
     </div>
     {% endfor %}

@@ -14,39 +14,39 @@ Editar plato
 {% block main %}
 <form name="formulario" action="/update/{{plato[0]}}" method="POST" enctype="multipart/form-data">
     <div><input type="hidden" name="txtIdPlato" id="txtIdPlato" value="{{plato[0]}}"></div>
-    <div>
-        <label for="txtNombre">Nombre: </label>
-        <input type="text" name="txtNombre" id="txtNombre" value="{{plato[1]}}" required >
+    <div class="row my-2">
+        <div class="col-1"><label for="txtNombre">Nombre: </label></div>
+        <div class="col-2"><input type="text" name="txtNombre" id="txtNombre" value="{{plato[1]}}" required ></div>
     </div>
-    <br>
-    <div>
-        <label for="txtDescripcion_p">Descripción: </label>
-        <textarea type="text" name="txtDescripcionPlato" id="txtDescripcionPlato" value="{{plato[2]}}" required>{{plato[2]}}</textarea>
+    <div class="row my-2">
+        <div class="col-1"><label for="txtDescripcion_p">Descripción: </label></div>
+        <div class="col-2"><textarea type="text" name="txtDescripcionPlato" id="txtDescripcionPlato" value="{{plato[2]}}" required>{{plato[2]}}</textarea></div>
     </div>
-    <br>
-    <div>
-        <label for="txtPrecio">Precio: </label>
-        <input type="text" name="txtPrecio" id="txtPrecio" value="{{plato[3]}}" required>
+    <div class="row my-2">
+        <div class="col-1"><label for="txtPrecio">Precio: </label></div>
+        <div class="col-2"><input type="text" name="txtPrecio" id="txtPrecio" value="{{plato[3]}}" required></div>
     </div>
-    <br>
-    <div class="txtFoto">
-        <label for="txtFoto">Foto: </label>
-        <input type="file" name="txtFoto" id="txtFoto">
-    </div><br>
-    <div><img width="300px" src="../fotos/{{plato[4]}}" alt="{{plato[4]}}"></div>
-    <br>
-    
-
-    <div>
-        <div><label for="txtCategoria">Categoria: </label>
+    <div class="row my-2">
+        <div class="col-1"><label for="txtFoto">Foto: </label></div>
+        <div class="col-2"><input type="file" name="txtFoto" id="txtFoto"></div>
+    </div>
+    <div class="row my-2">
+        <div class="col-2"><img width="300px" src="../fotos/{{plato[4]}}" alt="{{plato[4]}}"></div>
+    </div>
+    <div class="row my-2">
+        <div class="col-1"><label for="txtCategoria">Categoria: </label></div>
+        <div class="col-1">
             <select name="txtCategoria" id="txtCategoria">
                 <option value="{{plato[5]}}">{{plato[7]}}</option>
                 {% for categoria in categorias %}
                     <option value="{{categoria[0]}}">{{categoria[1]}}</option>
                 {% endfor %}
-            </select></div>
+            </select>
+        </div>
     </div>
-    <div><input type="submit" value="Modificar plato"></div>
+    <div class="row my-3">
+        <div class="col-2"><input class="btn btn-outline-secondary" type="submit" value="Modificar plato"></div>
+    </div>
     <input type="hidden" name="viejoNombreFoto" id="viejoNombreFoto" value="{{plato[4]}}">
 </form>
 

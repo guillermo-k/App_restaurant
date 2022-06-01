@@ -49,8 +49,9 @@ def ingresar():
     cursor.execute(sql, nombre)
     usuario_backend = cursor.fetchone()
     conn.commit()
-    usuario, clave, superusuario = usuario_backend
-    if usuario != ():
+    
+    if usuario_backend:
+        usuario, clave, superusuario = usuario_backend
         if password == cryptocode.decrypt(clave, app.secret_key):
             session['username'] = usuario
             if superusuario:
@@ -346,7 +347,8 @@ def crear_usuario():
 
     if 'super' in session:
         nuevo_usuario = request.form['txtUsuario']
-        nuevo_password = cryptocode.encrypt(request.form['txtPassword'], app.secret_key)
+        nuevo_password = cryptocode.encrypt(request.form['txtPassword'], 
+                                            app.secret_key)
         super = request.form.get('superUsuario')
         datos_usuario = nuevo_usuario, nuevo_password, super
         sql = """INSERT INTO `my_resto`.`usuarios` (
@@ -370,7 +372,7 @@ def crear_usuario():
 @app.route('/modificar_usuario/', methods=['POST'])
 def modificar_usuario():
     """Edicion datos usuario (propios)"""
-    
+
     if 'username' in session:
         nuevo_nombre = request.form['txtUsuario']
         nuevo_password = request.form['txtPassword']
@@ -383,7 +385,8 @@ def modificar_usuario():
         cursor.execute("SELECT `usuario` FROM `my_resto`.`usuarios` ;")
         usuarios_backend = cursor.fetchall()
         usuarios_registrados = set(i[0] for i in usuarios_backend)
-        if not (nuevo_nombre in usuarios_registrados and nuevo_nombre == session['username']):
+        if not (nuevo_nombre in usuarios_registrados
+                 and nuevo_nombre == session['username']):
             cursor.execute(sql, usuario_modificado)
             session['username'] = nuevo_nombre
         else:

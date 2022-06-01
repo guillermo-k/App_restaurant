@@ -22,13 +22,14 @@ app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = ''
 app.config['CARPETA'] = os.path.join('fotos')
 app.config['CANTIDAD_DE_MESAS'] = int()
+app.config['USUARIO'] = None
 
 
 mysql = MySQL()
 mysql.init_app(app)
 
 database.create(mysql)
-database.create_admin_user(mysql, app.secret_key)
+database.create_default_users(mysql, app.secret_key)
 database.define_default_category(mysql)
 
 
@@ -45,15 +46,14 @@ def ingresar():
     conn = mysql.connect()
     cursor = conn.cursor()
     cursor.execute(sql, nombre)
-    global usuario
-    usuario = cursor.fetchall()
+    app.config['USUARIO'] = cursor.fetchone()
     conn.commit()
+    usuario, clave, superusuario = app.config['USUARIO']
     if usuario != ():
-        clave2 = cryptocode.decrypt(usuario[0][1], app.secret_key)
-        if password == clave2:
-            session['username'] = usuario[0][0]
-            if usuario[0][2]:
-                session['super'] = usuario[0][2]
+        if password == cryptocode.decrypt(clave, app.secret_key):
+            session['username'] = usuario
+            if superusuario:
+                session['super'] = superusuario
             return redirect('/mesas')
         else:
             flash('Usuario o contraseña erroneos')
@@ -96,7 +96,7 @@ def mesas():
             nro_mesa = mesa[0]
             pedido = mesa[1]
             suma = 0
-            
+
             subtotales_list = list()
             plato_list = list()
             cantidad_list = list()
@@ -108,7 +108,7 @@ def mesas():
                     precio_unitario = cursor.fetchone()[0]
                     subtotal_por_plato = precio_unitario * int(cantidad)
                     suma += subtotal_por_plato
-                    
+
                     plato_list.append(plato)
                     cantidad_list.append(cantidad)
                     subtotales_list.append(subtotal_por_plato)
@@ -126,7 +126,7 @@ def mesas():
             mesa_dict['total'] = suma
             mesas.append(mesa_dict)
 
-        # Acotamos la cantidad de mesas al número indicado por el usuario en /administracion
+        # Acotamos la cantidad de mesas al número indicado por el usuario
         mesas = mesas[:app.config['CANTIDAD_DE_MESAS']]
 
         return render_template('/mesas.html', mesas=mesas)
@@ -344,22 +344,19 @@ def crear_usuario():
     """Creacion de nuevo usuario. Requiere ser super usuario"""
 
     if 'super' in session:
-        nuevoUsuario = request.form['txtUsuario']
-        nuevoPassword = request.form['txtPassword']
+        nuevo_usuario = request.form['txtUsuario']
+        nuevo_password = cryptocode.encrypt(request.form['txtPassword'], app.secret_key)
         super = request.form.get('superUsuario')
-        nuevoPassword = cryptocode.encrypt(nuevoPassword, app.secret_key)
-        usuario1 = nuevoUsuario, nuevoPassword, super
+        datos_usuario = nuevo_usuario, nuevo_password, super
         sql = """INSERT INTO `my_resto`.`usuarios` (
             `usuario`, `password`, `super_usuario`) VALUES (%s, %s,%s)"""
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute("SELECT `usuario` FROM `my_resto`.`usuarios` ;")
-        usuarios1 = cursor.fetchall()
-        usuarios = []
-        for usuarioj in usuarios1:
-            usuarios.append(usuarioj[0])
-        if nuevoUsuario not in usuarios:
-            cursor.execute(sql, usuario1)
+        usuarios_backend = cursor.fetchall()
+        usuarios_registrados = set(i[0] for i in usuarios_backend)
+        if nuevo_usuario not in usuarios_registrados:
+            cursor.execute(sql, datos_usuario)
         else:
             flash('Nombre de usuario no disponible')
         conn.commit()
@@ -374,18 +371,20 @@ def modificar_usuario():
     """Edicion datos usuario (propios)"""
 
     if 'username' in session:
-        nuevoNombre = request.form['txtUsuario']
-        nuevoPassword = request.form['txtPassword']
-        nuevoPassword = cryptocode.encrypt(nuevoPassword, app.secret_key)
-        usuario1 = (nuevoNombre, nuevoPassword, usuario[0][0])
+        nuevo_nombre = request.form['txtUsuario']
+        nuevo_password = request.form['txtPassword']
+        nuevo_password = cryptocode.encrypt(nuevo_password, app.secret_key)
+        usuario_modificado = nuevo_nombre, nuevo_password, session['username']
         sql = """UPDATE `my_resto`.`usuarios`
         SET `usuario`= %s, `password`= %s WHERE `usuario`=%s;"""
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute("SELECT `usuario` FROM `my_resto`.`usuarios` ;")
-        usuarios = cursor.fetchall()  # Almacenamos los datos en una tupla
-        if nuevoNombre not in usuarios or nuevoNombre == usuario[0][0]:
-            cursor.execute(sql, usuario1)  # Actualizamos del usuario
+        usuarios_backend = cursor.fetchall()
+        usuarios_registrados = set(i[0] for i in usuarios_backend)
+        if not (nuevo_nombre in usuarios_registrados and nuevo_nombre == session['username']):
+            cursor.execute(sql, usuario_modificado)
+            session['username'] = nuevo_nombre
         else:
             flash('Nombre de usuario no disponible')
         conn.commit()

@@ -22,7 +22,6 @@ app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = ''
 app.config['CARPETA'] = os.path.join('fotos')
 app.config['CANTIDAD_DE_MESAS'] = int()
-app.config['USUARIO'] = None
 
 
 mysql = MySQL()
@@ -40,15 +39,17 @@ def login():
 
 @app.route('/ingresar', methods=['POST'])
 def ingresar():
+    usuario_backend = ()
+
     nombre = request.form['txtUsuario']
     password = request.form['txtPassword']
     sql = "SELECT * FROM `my_resto`.`usuarios` WHERE `usuario` LIKE %s"
     conn = mysql.connect()
     cursor = conn.cursor()
     cursor.execute(sql, nombre)
-    app.config['USUARIO'] = cursor.fetchone()
+    usuario_backend = cursor.fetchone()
     conn.commit()
-    usuario, clave, superusuario = app.config['USUARIO']
+    usuario, clave, superusuario = usuario_backend
     if usuario != ():
         if password == cryptocode.decrypt(clave, app.secret_key):
             session['username'] = usuario
@@ -369,7 +370,7 @@ def crear_usuario():
 @app.route('/modificar_usuario/', methods=['POST'])
 def modificar_usuario():
     """Edicion datos usuario (propios)"""
-
+    
     if 'username' in session:
         nuevo_nombre = request.form['txtUsuario']
         nuevo_password = request.form['txtPassword']

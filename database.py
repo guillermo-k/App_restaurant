@@ -47,7 +47,8 @@ def create(mysql):
 def create_default_users(mysql, secret_key):
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("SELECT count(*) FROM `my_resto`.`usuarios`")
+    cursor.execute("""SELECT count(*) FROM `my_resto`.`usuarios`
+                    WHERE `super_usuario` = 1""")
     cantidad_de_usuarios = cursor.fetchone()[0]
     if cantidad_de_usuarios == 0:
         clave_admin = cryptocode.encrypt('admin', secret_key)

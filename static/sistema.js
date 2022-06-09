@@ -17,6 +17,7 @@ function desplegar(id) {
 }
 
 function ver(id) {
+    console.log(id);
     var x = document.getElementById(id);
     var y = document.getElementsByClassName(id)
     if (x.style.display === "none") {

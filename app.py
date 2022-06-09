@@ -26,11 +26,9 @@ app.config['CANTIDAD_DE_MESAS'] = int()
 
 mysql = MySQL()
 mysql.init_app(app)
-conn = mysql.connect()
-cursor = conn.cursor()
 
 database.create(mysql)
-database.create_admin_user(mysql, app.secret_key)
+database.create_default_users(mysql, app.secret_key)
 database.define_default_category(mysql)
 
 
@@ -41,21 +39,23 @@ def login():
 
 @app.route('/ingresar', methods=['POST'])
 def ingresar():
+    usuario_backend = ()
+
     nombre = request.form['txtUsuario']
     password = request.form['txtPassword']
     sql = "SELECT * FROM `my_resto`.`usuarios` WHERE `usuario` LIKE %s"
     conn = mysql.connect()
     cursor = conn.cursor()
     cursor.execute(sql, nombre)
-    global usuario
-    usuario = cursor.fetchall()
+    usuario_backend = cursor.fetchone()
     conn.commit()
-    if usuario != ():
-        clave2 = cryptocode.decrypt(usuario[0][1], app.secret_key)
-        if password == clave2:
-            session['username'] = usuario[0][0]
-            if usuario[0][2]:
-                session['super'] = usuario[0][2]
+
+    if usuario_backend:
+        usuario, clave, superusuario = usuario_backend
+        if password == cryptocode.decrypt(clave, app.secret_key):
+            session['username'] = usuario
+            if superusuario:
+                session['super'] = superusuario
             return redirect('/mesas')
         else:
             flash('Usuario o contraseña erroneos')
@@ -67,7 +67,19 @@ def ingresar():
 
 @app.route('/mesas/')
 def mesas():
-    """Listado de mesas, carga de pedidos por mesa, y cierre de mesa"""
+    """Listado de mesas, carga de pedidos por mesa, y cierre de mesa
+    mesas =[
+        {
+            'nro_mesa': int,
+            'pedido': {
+                        'plato': [...],
+                        'cantidad': [...],
+                        'subtotales': [...]
+                      },
+            'total': float
+        },
+    ]
+    """
 
     cookie = request.cookies.get('mesas')
     if cookie:
@@ -80,10 +92,16 @@ def mesas():
         mesas_backend = cursor.fetchall()
         mesas = list()
         for mesa in mesas_backend:
-            nro_de_mesa = mesa[0]
+            mesa_dict = dict()
+            pedido_dict = dict()
+
+            nro_mesa = mesa[0]
             pedido = mesa[1]
             suma = 0
-            subtotales = list()
+
+            subtotales_list = list()
+            plato_list = list()
+            cantidad_list = list()
             if pedido:
                 pedido = json.loads(pedido)  # mesa[1] trae un json
                 for plato, cantidad in pedido.items():
@@ -91,21 +109,28 @@ def mesas():
                                    WHERE `nombre` LIKE %s;""", (plato))
                     precio_unitario = cursor.fetchone()[0]
                     subtotal_por_plato = precio_unitario * int(cantidad)
-                    subtotales.append((f'{plato}: {cantidad}',
-                                       subtotal_por_plato))
                     suma += subtotal_por_plato
+
+                    plato_list.append(plato)
+                    cantidad_list.append(cantidad)
+                    subtotales_list.append(subtotal_por_plato)
             else:
-                subtotales.append(['Sin pedidos', 0])
-            mesas.append([nro_de_mesa, subtotales, suma])
+                plato_list = ['Sin pedidos']
+                cantidad_list = ['']
+                subtotales_list = ['']
+
+            pedido_dict['plato'] = plato_list
+            pedido_dict['cantidad'] = cantidad_list
+            pedido_dict['subtotales'] = subtotales_list
+
+            mesa_dict['nro_mesa'] = nro_mesa
+            mesa_dict['pedido'] = pedido_dict
+            mesa_dict['total'] = suma
+            mesas.append(mesa_dict)
 
         # Acotamos la cantidad de mesas al número indicado por el usuario
         mesas = mesas[:app.config['CANTIDAD_DE_MESAS']]
-        # mesas: (list of lists)
-        # mesas[0]: (list)
-        #     mesas[0][0]: (int) número de mesa
-        #     mesas[0][1]: (tuple) pedido
-        #     mesas[0][1][0]: (str) item (agua, fideos, etc)
-        #     mesas[0][1][1]: (float) subtotal
+
         return render_template('/mesas.html', mesas=mesas)
     else:
         flash('Debe registrarse antes')
@@ -156,8 +181,6 @@ def administracion():
         cursor.execute("SELECT* FROM `my_resto`.`categorias`;")
         categorias = cursor.fetchall()
         conn.commit()
-        """Renderizamos administracion.html
-        pasando el menu y la cantidad de mesas seleccionadas"""
         return render_template(
                 'administracion.html',
                 platos=platos,
@@ -250,18 +273,19 @@ def update(id_plato=None):
         tiempo = now.strftime('%Y%H%M%S_')
         extension = foto.filename.split('.')
         if foto.filename != '':
-            nuevoNombreFoto = tiempo+nombre+'.'+extension[1]
-            foto.save('App_restaurant/fotos/'+nuevoNombreFoto)
+            nuevo_nombre_foto = tiempo+nombre+'.'+extension[1]
+            foto.save('App_restaurant/fotos/'+nuevo_nombre_foto)
             if id_plato:
                 sql = 'SELECT foto FROM `my_resto`.`platos` WHERE id_plato=%s'
                 cursor.execute(sql, id_plato)
                 fotoVieja = cursor.fetchall()[0][0]
                 borrar_foto(fotoVieja)
         else:
-            nuevoNombreFoto = request.form['viejoNombreFoto']
-            if nuevoNombreFoto == '':
-                nuevoNombreFoto = 'Sin foto'
-        dato = [nombre, descripcion_plato, precio, nuevoNombreFoto, categoria]
+            nuevo_nombre_foto = request.form['viejoNombreFoto']
+            if nuevo_nombre_foto == '':
+                nuevo_nombre_foto = 'Sin foto'
+        dato = [nombre, descripcion_plato, precio,
+                nuevo_nombre_foto, categoria]
         if id_plato:
             dato.append(id_plato)
             sql = """UPDATE `my_resto`.`platos`
@@ -321,22 +345,20 @@ def crear_usuario():
     """Creacion de nuevo usuario. Requiere ser super usuario"""
 
     if 'super' in session:
-        nuevoUsuario = request.form['txtUsuario']
-        nuevoPassword = request.form['txtPassword']
+        nuevo_usuario = request.form['txtUsuario']
+        nuevo_password = cryptocode.encrypt(request.form['txtPassword'],
+                                            app.secret_key)
         super = request.form.get('superUsuario')
-        nuevoPassword = cryptocode.encrypt(nuevoPassword, app.secret_key)
-        usuario1 = nuevoUsuario, nuevoPassword, super
+        datos_usuario = nuevo_usuario, nuevo_password, super
         sql = """INSERT INTO `my_resto`.`usuarios` (
             `usuario`, `password`, `super_usuario`) VALUES (%s, %s,%s)"""
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute("SELECT `usuario` FROM `my_resto`.`usuarios` ;")
-        usuarios1 = cursor.fetchall()
-        usuarios = []
-        for usuarioj in usuarios1:
-            usuarios.append(usuarioj[0])
-        if nuevoUsuario not in usuarios:
-            cursor.execute(sql, usuario1)
+        usuarios_backend = cursor.fetchall()
+        usuarios_registrados = set(i[0] for i in usuarios_backend)
+        if nuevo_usuario not in usuarios_registrados:
+            cursor.execute(sql, datos_usuario)
         else:
             flash('Nombre de usuario no disponible')
         conn.commit()
@@ -351,18 +373,21 @@ def modificar_usuario():
     """Edicion datos usuario (propios)"""
 
     if 'username' in session:
-        nuevoNombre = request.form['txtUsuario']
-        nuevoPassword = request.form['txtPassword']
-        nuevoPassword = cryptocode.encrypt(nuevoPassword, app.secret_key)
-        usuario1 = (nuevoNombre, nuevoPassword, usuario[0][0])
+        nuevo_nombre = request.form['txtUsuario']
+        nuevo_password = request.form['txtPassword']
+        nuevo_password = cryptocode.encrypt(nuevo_password, app.secret_key)
+        usuario_modificado = nuevo_nombre, nuevo_password, session['username']
         sql = """UPDATE `my_resto`.`usuarios`
         SET `usuario`= %s, `password`= %s WHERE `usuario`=%s;"""
         conn = mysql.connect()
         cursor = conn.cursor()
         cursor.execute("SELECT `usuario` FROM `my_resto`.`usuarios` ;")
-        usuarios = cursor.fetchall()  # Almacenamos los datos en una tupla
-        if nuevoNombre not in usuarios or nuevoNombre == usuario[0][0]:
-            cursor.execute(sql, usuario1)  # Actualizamos del usuario
+        usuarios_backend = cursor.fetchall()
+        usuarios_registrados = set(i[0] for i in usuarios_backend)
+        if (nuevo_nombre not in usuarios_registrados
+                or nuevo_nombre == session['username']):
+            cursor.execute(sql, usuario_modificado)
+            session['username'] = nuevo_nombre
         else:
             flash('Nombre de usuario no disponible')
         conn.commit()
@@ -417,8 +442,6 @@ def cantidadMesas():
     cursor = conn.cursor()
     cursor.execute("SELECT count(*) FROM `my_resto`.`mesas`")
     mesas = int(cursor.fetchone()[0])
-    """Mientras que la cantidad de mesas existentes sea menor
-    que la indicada por el usuario"""
     while mesas < app.config['CANTIDAD_DE_MESAS']:
         cursor.execute("INSERT `my_resto`.`mesas`(`pedidos`) VALUES(NULL)")
         mesas += 1
@@ -448,7 +471,7 @@ def cerrarCuenta(mesa):
             sql2 = """SELECT `precio` FROM `my_resto`.`platos`
                 WHERE `nombre` LIKE %s;"""
             cursor.execute(sql2, key)  # Buscamos el precio unitario del plato
-            precio = int(cursor.fetchone()[0])  # Almacenamos el precio
+            precio = int(cursor.fetchone()[0])
             monto = precio*cant
             suma += monto
             plato = (key, cant, monto)

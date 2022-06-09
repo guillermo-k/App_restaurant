@@ -44,16 +44,22 @@ def create(mysql):
         PRIMARY KEY (`id_venta`));""")
 
 
-def create_admin_user(mysql, secret_key):
+def create_default_users(mysql, secret_key):
     conn = mysql.connect()
     cursor = conn.cursor()
-    cursor.execute("SELECT count(*) FROM `my_resto`.`usuarios`")
+    cursor.execute("""SELECT count(*) FROM `my_resto`.`usuarios`
+                    WHERE `super_usuario` = 1""")
     cantidad_de_usuarios = cursor.fetchone()[0]
     if cantidad_de_usuarios == 0:
-        clave = cryptocode.encrypt('admin', secret_key)
-        cursor.execute("""INSERT `my_resto`.`usuarios`(
-            `usuario`,`password`,`super_usuario`)
-            VALUES ('admin', %s, 1);""", (clave))
+        clave_admin = cryptocode.encrypt('admin', secret_key)
+        clave_normal = cryptocode.encrypt('normal', secret_key)
+        cursor.execute("""
+                INSERT `my_resto`.`usuarios`(
+                    `usuario`,`password`,`super_usuario`)
+                VALUES
+                ('admin', %s, 1),
+                ('normal', %s, 0);
+                """, (clave_admin, clave_normal))
     conn.commit()
 
 

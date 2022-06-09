@@ -181,8 +181,6 @@ def administracion():
         cursor.execute("SELECT* FROM `my_resto`.`categorias`;")
         categorias = cursor.fetchall()
         conn.commit()
-        """Renderizamos administracion.html
-        pasando el menu y la cantidad de mesas seleccionadas"""
         return render_template(
                 'administracion.html',
                 platos=platos,
@@ -275,18 +273,19 @@ def update(id_plato=None):
         tiempo = now.strftime('%Y%H%M%S_')
         extension = foto.filename.split('.')
         if foto.filename != '':
-            nuevoNombreFoto = tiempo+nombre+'.'+extension[1]
-            foto.save('App_restaurant/fotos/'+nuevoNombreFoto)
+            nuevo_nombre_foto = tiempo+nombre+'.'+extension[1]
+            foto.save('App_restaurant/fotos/'+nuevo_nombre_foto)
             if id_plato:
                 sql = 'SELECT foto FROM `my_resto`.`platos` WHERE id_plato=%s'
                 cursor.execute(sql, id_plato)
                 fotoVieja = cursor.fetchall()[0][0]
                 borrar_foto(fotoVieja)
         else:
-            nuevoNombreFoto = request.form['viejoNombreFoto']
-            if nuevoNombreFoto == '':
-                nuevoNombreFoto = 'Sin foto'
-        dato = [nombre, descripcion_plato, precio, nuevoNombreFoto, categoria]
+            nuevo_nombre_foto = request.form['viejoNombreFoto']
+            if nuevo_nombre_foto == '':
+                nuevo_nombre_foto = 'Sin foto'
+        dato = [nombre, descripcion_plato, precio,
+                nuevo_nombre_foto, categoria]
         if id_plato:
             dato.append(id_plato)
             sql = """UPDATE `my_resto`.`platos`
@@ -385,7 +384,7 @@ def modificar_usuario():
         cursor.execute("SELECT `usuario` FROM `my_resto`.`usuarios` ;")
         usuarios_backend = cursor.fetchall()
         usuarios_registrados = set(i[0] for i in usuarios_backend)
-        if not (nuevo_nombre in usuarios_registrados
+        if (nuevo_nombre not in usuarios_registrados
                 or nuevo_nombre == session['username']):
             cursor.execute(sql, usuario_modificado)
             session['username'] = nuevo_nombre
@@ -443,8 +442,6 @@ def cantidadMesas():
     cursor = conn.cursor()
     cursor.execute("SELECT count(*) FROM `my_resto`.`mesas`")
     mesas = int(cursor.fetchone()[0])
-    """Mientras que la cantidad de mesas existentes sea menor
-    que la indicada por el usuario"""
     while mesas < app.config['CANTIDAD_DE_MESAS']:
         cursor.execute("INSERT `my_resto`.`mesas`(`pedidos`) VALUES(NULL)")
         mesas += 1
@@ -474,7 +471,7 @@ def cerrarCuenta(mesa):
             sql2 = """SELECT `precio` FROM `my_resto`.`platos`
                 WHERE `nombre` LIKE %s;"""
             cursor.execute(sql2, key)  # Buscamos el precio unitario del plato
-            precio = int(cursor.fetchone()[0])  # Almacenamos el precio
+            precio = int(cursor.fetchone()[0])
             monto = precio*cant
             suma += monto
             plato = (key, cant, monto)
